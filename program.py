@@ -3,6 +3,7 @@ print("Hello i am your assistant.")
 def add_goal():
     if not goal:
         return "Goal cannot be empty"
+        
         from datetime import datetime
         now = datetime.now()
         f = now.strftime("%Y-%m-%d %H:%M")
@@ -171,8 +172,6 @@ while True:
     print("6 - Get today's goals")
     print("7 - Delete goals")
     print("8 - Exit")
-
-    choice = input("Choose: ")
 
     if choice == "1":
        add_goal()
