@@ -8,6 +8,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 TOKEN = "8680262922:AAHNveyzRB_Gl4ZbFxq1JlceRXf8xQIeK3Q"
 
 from program import get_todays_goal, add_todays_goal
+
 async def start(update: Update, context):
     text = (
         "I am your assistant 🚀\n\n"

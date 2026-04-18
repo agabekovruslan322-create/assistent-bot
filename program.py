@@ -1,31 +1,17 @@
 print("Hello i am your assistant.")
 
 def add_goal():
-    while True:
-        goal = input("Enter your goal: ")
+    if not goal:
+        return "Goal cannot be empty"
+        from datetime import datetime
+        now = datetime.now()
+        f = now.strftime("%Y-%m-%d %H:%M")
 
-        if goal == "":
-            print("Goal cannot be empty!")
-        else:
-            from datetime import datetime
-            now = datetime.now()
-            f = now.strftime("%Y-%m-%d %H:%M")
-            with open("goal.txt", "a") as file:
-                file.write(f"{goal} | {f}\n")
-                
-            with open("history.txt", "a") as history:
-                history.write(f"{goal} | {f}\n")
-                print("Goal added!")
+        with open("goal.txt" "a") as file:
+            file,write(f"{goal} | {f}\n")
 
-            while True:
-                answer = input("Do you want to add another goal? (yes/no): ").lower().strip()
-            
-                if answer == "yes":
-                    break
-                elif answer == "no":
-                    return
-                else:
-                    print("Please enter yes or no.")
+        return "Todays goal added!"
+   
 
 def show_goals():
     try:
@@ -100,7 +86,6 @@ def add_todays_goal(goal):
 
 def get_todays_goal():
     try:
-        from datetime import datetime
         today = datetime.now().strftime("%Y-%m-%d")
         found = False
 
