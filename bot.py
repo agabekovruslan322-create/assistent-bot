@@ -21,6 +21,10 @@ async def today(update, context):
     result = get_todays_goal()
     await update.message.reply_text(result)
 
+async def add(update, context):
+    result = add_todays_goal
+    await update.message.reply_text(result)
+
 app = ApplicationBuilder().token(TOKEN).build()
 
 app.add_handler(CommandHandler("start", start))
