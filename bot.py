@@ -22,7 +22,17 @@ async def today(update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(result)
 
 async def add(update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("ADD WORKS")
+    async def add(update, context):
+    if not context.args:
+        await update.message.reply_text(
+            "Напиши цель после команды.\nПример: /add Go to gym"
+        )
+        return
+
+    goal = " ".join(context.args)
+
+    result = add_todays_goal(goal)
+    await update.message.reply_text(result)
     
 
 app = ApplicationBuilder().token(TOKEN).build()
