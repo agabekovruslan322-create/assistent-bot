@@ -22,14 +22,7 @@ async def today(update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(result)
 
 async def add(update, context: ContextTypes.DEFAULT_TYPE):
-    if not context.args:
-        await update.message.reply_text("Write goal after command.\nExample: /add Do homework")
-        return
-    
-    goal = " ".join(content.args)
-
-    result = add_todays_goal(goal)
-    await update.message.reply_text(result)
+    await update.message.reply_text("ADD WORKS")
 
 
 def main():
