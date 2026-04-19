@@ -23,9 +23,6 @@ async def today(update, context: ContextTypes.DEFAULT_TYPE):
 
 async def add(update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("ADD WORKS")
-
-
-def main():
     
 
 app = ApplicationBuilder().token(TOKEN).build()
