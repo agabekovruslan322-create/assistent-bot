@@ -33,12 +33,20 @@ async def add(update, context):
     result = add_todays_goal(goal)
     await update.message.reply_text(result)
     
+    async def showfile(update, context):
+    try:
+        with open("todays_goal.txt", "r") as f:
+            content = f.read()
+            await update.message.reply_text(content or "Empty")
+    except:
+        await update.message.reply_text("File not found")
 
 app = ApplicationBuilder().token(TOKEN).build()
 
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("today", today))
 app.add_handler(CommandHandler("add", add))
+app.add_handler(CommandHandler("file", showfile))
 
 app.run_polling()
 
