@@ -41,12 +41,13 @@ async def add(update, context):
         except:
             await update.message.reply_text("File not found")
 
+
 app = ApplicationBuilder().token(TOKEN).build()
 
+app.add_handler(CommandHandler("file", showfile))
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("today", today))
 app.add_handler(CommandHandler("add", add))
-app.add_handler(CommandHandler("file", showfile))
 
 app.run_polling()
 
