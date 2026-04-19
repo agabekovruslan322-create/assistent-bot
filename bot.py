@@ -34,12 +34,12 @@ async def add(update, context):
     await update.message.reply_text(result)
     
     async def showfile(update, context):
-    try:
-        with open("todays_goal.txt", "r") as f:
-            content = f.read()
-            await update.message.reply_text(content or "Empty")
-    except:
-        await update.message.reply_text("File not found")
+        try:
+            with open("todays_goal.txt", "r") as f:
+                content = f.read()
+                await update.message.reply_text(content or "Empty")
+        except:
+            await update.message.reply_text("File not found")
 
 app = ApplicationBuilder().token(TOKEN).build()
 
