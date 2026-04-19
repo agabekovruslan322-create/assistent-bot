@@ -35,8 +35,8 @@ async def add(update, context):
     
     async def showfile(update, context):
         try:
-            with open("todays_goal.txt", "r") as f:
-                content = f.read()
+            with open("todays_goal.txt", "r") as file:
+                content = file.read()
                 await update.message.reply_text(content or "Empty")
         except:
             await update.message.reply_text("File not found")
