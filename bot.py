@@ -21,8 +21,7 @@ async def today(update, context: ContextTypes.DEFAULT_TYPE):
     result = get_todays_goal()
     await update.message.reply_text(result)
 
-async def add(update, context: ContextTypes.DEFAULT_TYPE):
-    async def add(update, context):
+async def add(update, context):
     if not context.args:
         await update.message.reply_text(
             "Напиши цель после команды.\nПример: /add Go to gym"
