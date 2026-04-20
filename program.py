@@ -84,7 +84,7 @@ def add_todays_goal(user_id, goal):
     with open(filename, "a") as file:
         file.write(f"{goal} | {f}\n")
 
-    return "Today's goal added!"
+    return "Цель на завтра добавлена!!"
 
 def get_todays_goal(user_id):
     filename = f"goals_{user_id}.txt"
@@ -107,10 +107,10 @@ def get_todays_goal(user_id):
             if date == today:
                 result += f"• {goal}\n"
 
-        return result if result else "No goals for today!"
+        return result if result else "На завтра целей нет!"
 
     except FileNotFoundError:
-        return "No goals yet!"
+        return "Целей пока нет!"
 
 def delete_goals():
     try:
