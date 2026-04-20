@@ -163,5 +163,3 @@ def exit_program():
     print("Goodbye!")
     exit()
 
-print("\n🔥---TODAY---🔥")
-get_todays_goal()
