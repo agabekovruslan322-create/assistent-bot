@@ -10,7 +10,7 @@ TOKEN = "8680262922:AAHNveyzRB_Gl4ZbFxq1JlceRXf8xQIeK3Q"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = (
-        "здравствуйте! Я ваш ассистент. 🚀\n\n"
+        "Здравствуйте! Я ваш ассистент. 🚀\n\n"
         "Команды:\n"
         "🔵 /today - Показать цели на сегодня\n"
         "🔵 /add - Добавить цель на завтра\n"
