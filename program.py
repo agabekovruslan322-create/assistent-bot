@@ -85,47 +85,32 @@ def add_todays_goal(user_id, goal):
         file.write(f"{goal} | {f}\n")
 
     return "Today's goal added!"
-    
 
 def get_todays_goal(user_id):
     filename = f"goals_{user_id}.txt"
+    today = datetime.now().strftime("%Y-%m-%d")
 
     try:
-        today = datetime.now().strftime("%Y-%m-%d")
-        found = False
-
         with open(filename, "r") as file:
-            return file.read() or "No goals yet!"
+            lines = file.readlines()
 
-            result = ""
+        result = ""
 
-            if not goals:
-                return "No goals yet!"
-            else:
-                for line in goals:
-                    text = line.strip()
+        for line in lines:
+            if "|" not in line:
+                continue
 
-                    if "|" not in text:
-                        continue
+            goal, date = line.strip().split("|")
+            goal = goal.strip()
+            date = date.strip()
 
-                        goal, date = text.split("|")
+            if date == today:
+                result += f"• {goal}\n"
 
-                        goal = goal.strip()
-                        date = date.strip()
-
-                        date = date.split()[0]
-
-                        if date == today:
-                            result += "Today's goal: " + goal + "\n"
-                            found = True
-
-        if not found:
-            return "No goals for today!"
-
-        return result
+        return result if result else "No goals for today!"
 
     except FileNotFoundError:
-         return "No goals yet!"
+        return "No goals yet!"
 
 def delete_goals():
     try:
