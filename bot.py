@@ -19,10 +19,14 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(text)
 
 async def today(update, context: ContextTypes.DEFAULT_TYPE):
-    result = get_todays_goal()
+    user_id = update.message.from_user.id 
+    
+    result = get_todays_goal(user_id)
     await update.message.reply_text(result)
 
 async def add(update, context):
+    user_id = update.message.from_user.id 
+
     if not context.args:
         await update.message.reply_text(
             "Напиши цель после команды.\nПример: /add Go to gym"
@@ -31,12 +35,16 @@ async def add(update, context):
 
     goal = " ".join(context.args)
 
-    result = add_todays_goal(goal)
+    result = add_todays_goal(user_id, goal)
+
     await update.message.reply_text(result)
     
 async def showfile(update, context):
+    user_id = update.message.from_user.id  
+    filename = f"goals_{user_id}.txt"
+
     try:
-        with open("todays_goal.txt", "r") as file:
+        with open(filename, "r") as file:
             content = file.read()
             await update.message.reply_text(content or "Empty")
     except:
