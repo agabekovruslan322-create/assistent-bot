@@ -10,11 +10,11 @@ TOKEN = "8680262922:AAHNveyzRB_Gl4ZbFxq1JlceRXf8xQIeK3Q"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = (
-        "I am your assistant 🚀\n\n"
-        "Commands:\n"
-        "/today - show todays goals\n"
-        "/add - add todays goal\n"
-        "/list - list of all goals\n"
+        "здравствуйте! Я ваш ассистент. 🚀\n\n"
+        "Команды:\n"
+        "🔵 /today - Показать цели на сегодня\n"
+        "🔵 /add - Добавить цель на завтра\n"
+        "🔵 /list - Полный список целей\n"
     )
     await update.message.reply_text(text)
 
@@ -48,7 +48,7 @@ async def showfile(update, context):
             content = file.read()
             await update.message.reply_text(content or "Empty")
     except:
-        await update.message.reply_text("Target list is empty!")
+        await update.message.reply_text("Список целей пуст!")
 
 def main():
     app = ApplicationBuilder().token(TOKEN).build()
