@@ -87,8 +87,9 @@ def add_todays_goal(user_id, goal):
     return "Today's goal added!"
     
 
-def get_todays_goal():
+def get_todays_goal(user_id):
     filename = f"goals_{user_id}.txt"
+
     try:
         today = datetime.now().strftime("%Y-%m-%d")
         found = False
