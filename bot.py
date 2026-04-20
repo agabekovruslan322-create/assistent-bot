@@ -48,7 +48,7 @@ async def showfile(update, context):
             content = file.read()
             await update.message.reply_text(content or "Empty")
     except:
-        await update.message.reply_text("File not found")
+        await update.message.reply_text("Target list is empty!")
 
 def main():
     app = ApplicationBuilder().token(TOKEN).build()
