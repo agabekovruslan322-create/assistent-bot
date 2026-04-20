@@ -14,6 +14,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "Commands:\n"
         "/today - show todays goals\n"
         "/add - add todays goal\n"
+        "/list - list of all goals\n"
     )
     await update.message.reply_text(text)
 
@@ -44,7 +45,7 @@ async def showfile(update, context):
 def main():
     app = ApplicationBuilder().token(TOKEN).build()
 
-    app.add_handler(CommandHandler("file", showfile))
+    app.add_handler(CommandHandler("list", showfile))
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("today", today))
     app.add_handler(CommandHandler("add", add))
