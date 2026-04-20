@@ -72,26 +72,29 @@ def search_goals():
 
 from datetime import datetime
 
-def add_todays_goal(goal):
+def add_todays_goal(user_id, goal):
+    filename = f"goals_{user_id}.txt"
+
     if not goal:
         return "Goal cannot be empty!"
 
     now = datetime.now()
     f = now.strftime("%Y-%m-%d %H:%M")
 
-    with open("todays_goal.txt", "a") as file:
+    with open(filename, "a") as file:
         file.write(f"{goal} | {f}\n")
 
     return "Today's goal added!"
     
 
 def get_todays_goal():
+    filename = f"goals_{user_id}.txt"
     try:
         today = datetime.now().strftime("%Y-%m-%d")
         found = False
 
-        with open("todays_goal.txt", "r") as file:
-            goals = file.readlines()
+        with open(filename, "r") as file:
+            return file.read() or "No goals yet!"
 
             result = ""
 
