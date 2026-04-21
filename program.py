@@ -14,7 +14,7 @@ def add_goal():
         return "Todays goal added!"
    
 
-def show_goals():
+def show_goals(user_id):
     filename = f"goals_{user_id}.txt"
 
     try:
