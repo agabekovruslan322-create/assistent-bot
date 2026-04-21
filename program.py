@@ -120,9 +120,8 @@ def delete_goals(user_id, index):
             file.writelines(lines)
 
             return f"Удалено: {deleted.strip()}"
-
     except FileNotFoundError:
-        return "Список целей пуст!"
+        return "Список пуст!Э
 
 def exit_program():
     print("Goodbye!")
