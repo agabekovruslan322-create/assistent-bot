@@ -113,36 +113,28 @@ def get_todays_goal(user_id):
         return "Целей пока нет!"
 
 def delete_goals():
+    filename = f"goals_{user_id}.txt"
+
     try:
-        with open("goal.txt", "r") as f:
-            lines = f.readlines()
+        with open(filename, "r") as file:
+            lines = file.readlines()
 
         if not lines:
             print("No goals yet!")
             return
 
-        for index, line in enumerate(lines, start=1):
-            print(f"{index}. {line.strip()}")
+        if index < 1 or index > len(lines):
+            return "Неверный номер!"
 
-        try:
-            num = int(input("Choose number: "))
-        except ValueError:
-            print("Enter a valid number!")
-            return
+        deleted = lines.pop(index - 1)
 
-        if num < 1 or num > len(lines):
-            print("Invalid number!")
-            return
+        with open(filename, "w") as file:
+            file.writelines(lines)
 
-        del lines[num - 1]
-
-        with open("goal.txt", "w") as f:
-            f.writelines(lines)
-
-        print("Goal deleted!")
+            return f"Удалено: {deleted.strip()}"
 
     except FileNotFoundError:
-        print("No goals yet!")
+        print("Список целей пуст!")
 
 def exit_program():
     print("Goodbye!")

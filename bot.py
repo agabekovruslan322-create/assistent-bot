@@ -50,6 +50,22 @@ async def showfile(update, context):
     except:
         await update.message.reply_text("Список целей пуст!")
 
+async def delete(update, context):
+    userid = update.message.from_user.id 
+
+    if not context.args:
+        await update.message.reply_text("Пример /delete 1")
+        return
+
+    try:
+        index = int(context.args[0])
+    except:
+        await update.message.reply_text("Введите номер цели!")
+        return
+    result = delete_goal(user_id, index)
+
+    await update.message.reply_text(result)
+
 def main():
     app = ApplicationBuilder().token(TOKEN).build()
 
@@ -57,6 +73,7 @@ def main():
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("today", today))
     app.add_handler(CommandHandler("add", add))
+    app.add_handler(CommandHandler("delete" delete))
 
     app.run_polling()
 
