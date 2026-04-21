@@ -96,6 +96,9 @@ def get_todays_goal(user_id):
 
         result = ""
 
+        for i, line in enumerate(lines, start=1):
+            result += f"{i}. {line.strip()}\n"
+
         for line in lines:
             if "|" not in line:
                 continue
