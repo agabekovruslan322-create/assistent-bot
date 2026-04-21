@@ -45,8 +45,7 @@ async def list_goals(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
 
     result = show_goals(user_id)
-
-    await update.message.reply_text("Список целей !")
+    await update.message.reply_text("Список целей пуст!")
 
 async def delete(update, context):
     userid = update.message.from_user.id 
