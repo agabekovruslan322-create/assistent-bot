@@ -15,33 +15,23 @@ def add_goal():
    
 
 def show_goals():
-    try:
+   filename = f"goals_{user_id}.txt"
+
+   try:
+    with open(filename, "r") as file:
+        lines = file.readlines()
+
+        if not lines:
+            return "Список пуст!"
         
-            with open("goal.txt", "r") as f:
-                goals = f.readlines()
+        result = ""
+        for i, line in enumerate(lines, start=1):
+            result += f"{i}. {line.strip()}\n"
 
-            if not goals:
-                return "No goals yet!"
-            
-            result = ""
-        
-            for line in goals:
-                text = line.strip()
-
-                if "|" not in text:
-                    continue
-
-                goal, date = text.split("|")
-
-                goal = goal.strip()
-                date = date.strip()
-
-                result += goal + " (" + date + ")\n"
-            
             return result
 
     except FileNotFoundError:
-        return "No goals yet!"
+        return "Список пуст"
 
 def show_history():
      with open("history.txt", "r") as f:
@@ -78,13 +68,13 @@ def add_todays_goal(user_id, goal):
     if not goal:
         return "Goal cannot be empty!"
 
-    now = datetime.now()
-    f = now.strftime("%Y-%m-%d %H:%M")
+    now = datetime.now().strftime("%Y-%m-%d %H:%M")
+   
 
     with open(filename, "a") as file:
-        file.write(f"{goal} | {f}\n")
+        file.write(f"{goal} | {now}\n")
 
-    return "Цель на завтра добавлена!!"
+    return "Цель добавлена!"
 
 def get_todays_goal(user_id):
     filename = f"goals_{user_id}.txt"

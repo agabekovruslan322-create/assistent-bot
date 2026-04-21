@@ -12,9 +12,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = (
         "Здравствуйте! Я ваш ассистент. 🚀\n\n"
         "Команды:\n"
-        "🔵 /today - Показать цели на сегодня\n"
-        "🔵 /add - Добавить цель на завтра\n"
-        "🔵 /list - Полный список целей\n"
+        "🔵 /today - Показать цели на сегодня.\n"
+        "🔵 /add - Добавить цель на завтра.\n"
+        "🔵 /list - Полный список целей.\n"
+        "🔵 /delete - Удалить цель.\n"
     )
     await update.message.reply_text(text)
 
@@ -39,10 +40,10 @@ async def add(update, context):
 
     await update.message.reply_text(result)
     
-async def showfile(update, context):
+async def list_goals(update, context):
     user_id = update.message.from_user.id  
     filename = f"goals_{user_id}.txt"
-    result = get_todays_goal(user_id)
+    result = show_goals(user_id)
 
     try:
         with open(filename, "r") as file:
@@ -70,7 +71,7 @@ async def delete(update, context):
 def main():
     app = ApplicationBuilder().token(TOKEN).build()
 
-    app.add_handler(CommandHandler("list", showfile))
+    app.add_handler(CommandHandler("list", list_goals))
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("today", today))
     app.add_handler(CommandHandler("add", add))
