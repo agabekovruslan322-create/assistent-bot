@@ -112,7 +112,7 @@ def get_todays_goal(user_id):
     except FileNotFoundError:
         return "Целей пока нет!"
 
-def delete_goals():
+def delete_goals(user_id, index):
     filename = f"goals_{user_id}.txt"
 
     try:
