@@ -15,7 +15,7 @@ def add_goal():
    
 
 def show_goals():
-   filename = f"goals_{user_id}.txt"
+    filename = f"goals_{user_id}.txt"
 
     try:
         with open(filename, "r") as file:
