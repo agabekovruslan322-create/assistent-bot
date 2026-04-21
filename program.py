@@ -21,14 +21,14 @@ def show_goals():
         with open(filename, "r") as file:
             lines = file.readlines()
 
-            if not lines:
-                return "Список пуст!"
+        if not lines:
+            return "Список пуст!"
         
-            result = ""
-            for i, line in enumerate(lines, start=1):
-                result += f"{i}. {line.strip()}\n"
+        result = ""
+        for i, line in enumerate(lines, start=1):
+            result += f"{i}. {line.strip()}\n"
 
-                return result
+            return result
 
     except FileNotFoundError:
         return "Список пуст"
