@@ -84,28 +84,19 @@ def get_todays_goal(user_id):
         with open(filename, "r") as file:
             lines = file.readlines()
 
-        todays_goals = []
+        result = ""
 
         for line in lines:
             if "|" not in line:
                 continue
 
             goal, date = line.strip().split("|")
-            goal = goal.strip()
-            date = date.strip()
+            date = date.strip().split()[0]
 
             if date == today:
-                todays_goals.append(goal)
+                result += f"• {goal.strip()}\n"
 
-        if not todays_goals:
-            return "На сегодня целей нет!"
-
-        result = ""
-
-        for i, goal in enumerate(todays_goals, start=1):
-            result += f"{i}. {goal}\n"
-
-        return result
+        return result if result else "На сегодня целей нет!"
 
     except FileNotFoundError:
         return "Целей пока нет!"
@@ -118,8 +109,7 @@ def delete_goals(user_id, index):
             lines = file.readlines()
 
         if not lines:
-            print("No goals yet!")
-            return
+            return "Список пуст!"
 
         if index < 1 or index > len(lines):
             return "Неверный номер!"
@@ -132,7 +122,7 @@ def delete_goals(user_id, index):
             return f"Удалено: {deleted.strip()}"
 
     except FileNotFoundError:
-        print("Список целей пуст!")
+        return "Список целей пуст!"
 
 def exit_program():
     print("Goodbye!")

@@ -4,7 +4,7 @@ print(requests.get("https://api.telegram.org").status_code)
 
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
-from program import get_todays_goal, add_todays_goal
+from program import get_todays_goal, add_todays_goal, show_goals, delete_goals
 
 TOKEN = "8680262922:AAHNveyzRB_Gl4ZbFxq1JlceRXf8xQIeK3Q"
 
