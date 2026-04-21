@@ -43,15 +43,8 @@ async def add(update, context):
     
 async def list_goals(update, context):
     user_id = update.message.from_user.id  
-    filename = f"goals_{user_id}.txt"
     result = show_goals(user_id)
-
-    try:
-        with open(filename, "r") as file:
-            content = file.read()
-            await update.message.reply_text(content or "Empty")
-    except:
-        await update.message.reply_text("Список целей пуст!")
+    await update.message.reply_text("Список целей пуст!")
 
 async def delete(update, context):
     userid = update.message.from_user.id 
@@ -62,12 +55,11 @@ async def delete(update, context):
 
     try:
         index = int(context.args[0])
+        result = delete_goals(user_id, index)
+        await update.message.reply_text(result)
     except:
         await update.message.reply_text("Введите номер цели!")
         return
-    result = delete_goal(user_id, index)
-
-    await update.message.reply_text(result)
 
 def main():
     app = ApplicationBuilder().token(TOKEN).build()
