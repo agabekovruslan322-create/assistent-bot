@@ -73,7 +73,7 @@ def main():
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("today", today))
     app.add_handler(CommandHandler("add", add))
-    app.add_handler(CommandHandler("delete" delete))
+    app.add_handler(CommandHandler("delete", delete))
 
     app.run_polling()
 
