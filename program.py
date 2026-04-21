@@ -17,7 +17,7 @@ def add_goal():
 def show_goals():
    filename = f"goals_{user_id}.txt"
 
-   try:
+    try:
     with open(filename, "r") as file:
         lines = file.readlines()
 
