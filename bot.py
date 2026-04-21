@@ -42,6 +42,7 @@ async def add(update, context):
 async def showfile(update, context):
     user_id = update.message.from_user.id  
     filename = f"goals_{user_id}.txt"
+    result = get_todays_goal(user_id)
 
     try:
         with open(filename, "r") as file:
