@@ -107,7 +107,7 @@ def get_todays_goal(user_id):
             if date == today:
                 result += f"• {goal}\n"
 
-        return result if result else "На завтра целей нет!"
+        return result if result else "На сегодня целей нет!"
 
     except FileNotFoundError:
         return "Целей пока нет!"
