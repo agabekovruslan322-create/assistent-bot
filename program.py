@@ -94,10 +94,7 @@ def get_todays_goal(user_id):
         with open(filename, "r") as file:
             lines = file.readlines()
 
-        result = ""
-
-        for i, line in enumerate(lines, start=1):
-            result += f"{i}. {line.strip()}\n"
+        todays_goals = []
 
         for line in lines:
             if "|" not in line:
@@ -108,9 +105,17 @@ def get_todays_goal(user_id):
             date = date.strip()
 
             if date == today:
-                result += f"• {goal}\n"
+                todays_goals.append(goal)
 
-        return result if result else "На сегодня целей нет!"
+        if not todays_goals:
+            return "На сегодня целей нет!"
+
+        result = ""
+
+        for i, goal in enumerate(todays_goals, start=1):
+            result += f"{i}. {goal}\n"
+
+        return result
 
     except FileNotFoundError:
         return "Целей пока нет!"
