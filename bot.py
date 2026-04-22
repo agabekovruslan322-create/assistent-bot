@@ -71,8 +71,7 @@ async def send_reminder(context: ContextTypes.DEFAULT_TYPE):
     )
 
 async def remind(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    print("ARGS:", context.args
-    )
+    print("ARGS:", context.args)
     if not context.args:
         await update.message.reply_text("Пример: /remind 10 (минут)")
         return
