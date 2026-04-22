@@ -50,7 +50,7 @@ async def list_goals(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def delete(update, context):
     print("ARGS:", context.args)
-    userid = update.message.from_user.id 
+    user_id = update.message.from_user.id 
 
     if not context.args:
         await update.message.reply_text("Пример /delete 1")
