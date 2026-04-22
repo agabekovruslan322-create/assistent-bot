@@ -4,6 +4,7 @@ print(requests.get("https://api.telegram.org").status_code)
 
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from datetime import timedelta
 
 from program import get_todays_goal, add_todays_goal, show_goals, delete_goals
 
@@ -63,6 +64,31 @@ async def delete(update, context):
         await update.message.reply_text("Введите номер цели!")
         return
 
+async def send_reminder(context: ContextTypes.DEFAULT_TYPE):
+    await context.bot.send_message(
+        chat_id=context.job.chat_id,
+        text="⏰ Напоминание! Проверь свои цели!"
+    )
+
+async def remind(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not context.args:
+        await update.message.reply_text("Пример: /remind 10 (минут)")
+        return
+    
+    try:
+        minutes = int(context.args[0])
+
+        context.job_queue.run_once(
+            send_reminder,
+            when=timedelta(minutes=minutes),
+            chat_id=update.message.chat_id
+        )
+
+        await update.message.reply_text(f"Напомню через {minutes} минут ⏰")
+
+    except:
+        await update.message.reply_text("Введите число!")
+
 def main():
     app = ApplicationBuilder().token(TOKEN).build()
 
@@ -71,6 +97,7 @@ def main():
     app.add_handler(CommandHandler("today", today))
     app.add_handler(CommandHandler("add", add))
     app.add_handler(CommandHandler("delete", delete))
+    app.add_handler(CommandHandler("remind", remind))
 
     app.run_polling()
 
