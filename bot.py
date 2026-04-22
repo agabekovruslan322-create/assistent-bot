@@ -4,7 +4,6 @@ print(requests.get("https://api.telegram.org").status_code)
 
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
-from datetime import timedelta
 
 from program import get_todays_goal, add_todays_goal, show_goals, delete_goals
 
@@ -18,6 +17,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "🔵 /add - Добавить цель на завтра.\n"
         "🔵 /list - Полный список целей.\n"
         "🔵 /delete - Удалить цель.\n"
+        "🛠 Бета версия /remid - напоминание целей (🔧находится в разработке🔧).\n"
     )
     await update.message.reply_text(text)
 
@@ -63,6 +63,8 @@ async def delete(update, context):
     except:
         await update.message.reply_text("Введите номер цели!")
         return
+
+from datetime import timedelta
 
 async def send_reminder(context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(
