@@ -30,7 +30,7 @@ def show_goals(user_id):
         for i, line in enumerate(lines, start=1):
             result += f"{i}. {line.strip()}\n"
 
-            return result
+        return result
 
     except FileNotFoundError:
         return "Список пуст"
