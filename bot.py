@@ -49,6 +49,7 @@ async def list_goals(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Список целей пуст!")
 
 async def delete(update, context):
+    print("ARGS:", context.args)
     userid = update.message.from_user.id 
 
     if not context.args:
