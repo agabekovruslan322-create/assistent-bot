@@ -71,23 +71,27 @@ async def send_reminder(context: ContextTypes.DEFAULT_TYPE):
     )
 
 async def remind(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print("ARGS:", context.args
+    )
     if not context.args:
         await update.message.reply_text("Пример: /remind 10 (минут)")
         return
+
+    arg = context.args[0].strip()
     
-    try:
-        minutes = int(context.args[0])
-
-        context.job_queue.run_once(
-            send_reminder,
-            when=timedelta(minutes=minutes),
-            chat_id=update.message.chat_id
-        )
-
-        await update.message.reply_text(f"Напомню через {minutes} минут ⏰")
-
-    except:
+    if not arg.isdigit():
         await update.message.reply_text("Введите число!")
+        return
+
+    minutes = int(context.args[0])
+
+    context.job_queue.run_once(
+        send_reminder,
+        when=timedelta(minutes=minutes),
+        chat_id=update.message.chat_id
+    )
+
+    await update.message.reply_text(f"Напомню через {minutes} минут ⏰")
 
 def main():
     app = ApplicationBuilder().token(TOKEN).build()
