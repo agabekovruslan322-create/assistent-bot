@@ -23,11 +23,10 @@ def show_goals(user_id):
         with open(filename, "r") as file:
             lines = file.readlines()
 
-        result = ""
-
         if not lines:
             return "Список пуст!"
         
+        result = ""
         for i, line in enumerate(lines, start=1):
             result += f"{i}. {line.strip()}\n"
 
