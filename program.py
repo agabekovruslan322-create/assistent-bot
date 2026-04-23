@@ -74,7 +74,7 @@ def add_todays_goal(user_id, goal):
    
     cursor.execute(
         "INSERT INTO goals (user_id, text, date) VALUES (?, ?, ?)",
-        (user_id, text, now)
+        (user_id, goal, now)
     )
 
     conn.commit()
