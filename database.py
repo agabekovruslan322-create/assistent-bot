@@ -23,7 +23,7 @@ def upgrade_db():
     conn = connect()
     cursor = conn.cursor()
     try:
-        cursor execute("ALTER TABLE goals ADD COLUMN date TEXT")
+        cursor.execute("ALTER TABLE goals ADD COLUMN date TEXT")
         conn.commit()
         print("Колонка успешно добавлена!")
     except:
