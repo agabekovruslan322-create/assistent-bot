@@ -72,10 +72,10 @@ def add_todays_goal(user_id, goal):
 
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
    
-   cursor.excute(
-    "INSERT INTO goals (user_id, text, date) VALUES (?, ?, ?)",
-    (user_id, text, now)
-   )
+    cursor.exуcute(
+        "INSERT INTO goals (user_id, text, date) VALUES (?, ?, ?)",
+        (user_id, text, now)
+    )
 
     conn.commit()
     conn.close()
