@@ -16,25 +16,26 @@ def add_goal():
 from database import connect
 
 def show_goals(user_id):
-    filename = f"goals_{user_id}.txt"
+    conn.connect()
+    cursor = conn.cursor()
 
-    print("LIST FILE:", filename)
+    cursor.excute(
+        "SELECT text, date FROM goals WHERE user_id=?",
+        (user_id)
+    )
 
-    try:
-        with open(filename, "r") as file:
-            lines = file.readlines()
+    rows = cursor.fetchall()
 
-        if not lines:
-            return "Список пуст!"
-        
-        result = ""
-        for i, line in enumerate(lines, start=1):
-            result += f"{i}. {line.strip()}\n"
+    conn.close()
 
-        return result
-
-    except FileNotFoundError:
+    if not rows:
         return "Список пуст"
+    
+    result = ""
+    for i,(text, date) in enumerate(rows, start=1):
+        result += f"{i}. {text} | {date}\n"
+        
+    return result
 
 def show_history():
      with open("history.txt", "r") as f:
@@ -66,16 +67,18 @@ from database import connect
 from datetime import datetime
 
 def add_todays_goal(user_id, goal):
-    filename = f"goals_{user_id}.txt"
-
-    if not goal:
-        return "Goal cannot be empty!"
+    conn = connect()
+    cursor = conn.cursor
 
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
    
+   cursor.excute(
+    "INSERT INTO goals (user_id, text, date) VALUES (?, ?, ?)",
+    (user_id, text, now)
+   )
 
-    with open(filename, "a") as file:
-        file.write(f"{goal} | {now}\n")
+    conn.commit()
+    conn.close()
 
     return "Цель добавлена!"
 
