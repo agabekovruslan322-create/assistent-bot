@@ -32,7 +32,7 @@ async def add(update, context):
     user_id = update.message.from_user.id 
     text = " ".join(context.args)
 
-    result = add_goal(user_id, text)
+    result = add_todays_goal(user_id, text)
 
     if not context.args:
         await update.message.reply_text(
