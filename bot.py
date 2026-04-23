@@ -33,7 +33,7 @@ async def add(update, context):
 
     goal_text = " ".join(context.args)
 
-    if not goal_text():
+    if not goal_text.strip():
         await update.message.reply_text(
             "Напиши цель после команды.\nПример: /add Go to gym"
         )
