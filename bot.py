@@ -4,6 +4,7 @@ print(requests.get("https://api.telegram.org").status_code)
 
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from database import create_table
 
 from program import get_todays_goal, add_todays_goal, show_goals, delete_goals
 
@@ -95,6 +96,8 @@ async def remind(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(f"Напомню через {minutes} минут ⏰")
 
 def main():
+    create_table()
+    
     app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("list", list_goals))

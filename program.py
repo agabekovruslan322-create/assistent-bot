@@ -1,4 +1,4 @@
-print("Hello i am your assistant.")
+from database import connect
 
 def add_goal():
     if not goal:
@@ -13,6 +13,7 @@ def add_goal():
 
         return "Todays goal added!"
    
+from database import connect
 
 def show_goals(user_id):
     filename = f"goals_{user_id}.txt"
@@ -61,7 +62,7 @@ def search_goals():
     except FileNotFoundError:
         return "No goals yet!"
             
-
+from database import connect
 from datetime import datetime
 
 def add_todays_goal(user_id, goal):
