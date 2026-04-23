@@ -8,7 +8,7 @@ def create_table():
     cursor = conn.cursor()
 
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS goals_v2 (
+    CREATE TABLE IF NOT EXISTS goals_v3 (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
         text TEXT,
@@ -17,15 +17,4 @@ def create_table():
     """)
 
     conn.commit()
-    conn.close()
-
-def upgrade_db():
-    conn = connect()
-    cursor = conn.cursor()
-    try:
-        cursor.execute("ALTER TABLE goals ADD COLUMN date TEXT")
-        conn.commit()
-        print("Колонка успешно добавлена!")
-    except:
-        print("Колонка уже существует или же чтото пошло не так")
     conn.close()
