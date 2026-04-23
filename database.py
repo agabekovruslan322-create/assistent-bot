@@ -16,5 +16,5 @@ CREATE TABLE IF NOT EXISTS goals (
     )
     """)
 
-    conn.commit()
-    conn.close()
+conn.commit()
+conn.close()
