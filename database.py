@@ -12,7 +12,7 @@ def create_table():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
         text TEXT,
-        DELE text 
+        date text 
     )
     """)
 
