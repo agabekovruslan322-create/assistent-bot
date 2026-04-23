@@ -68,11 +68,11 @@ from datetime import datetime
 
 def add_todays_goal(user_id, goal):
     conn = connect()
-    cursor = conn.cursor
+    cursor = conn.cursor()
 
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
    
-    cursor.exуcute(
+    cursor.execute(
         "INSERT INTO goals (user_id, text, date) VALUES (?, ?, ?)",
         (user_id, text, now)
     )
