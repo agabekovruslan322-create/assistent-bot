@@ -7,7 +7,7 @@ def create_table():
     conn = connect()
     cursor = conn.cursor()
 
-cursor.excute("""
+cursor.execute("""
 CREATE TABLE IF NOT EXISTS goals (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER,
