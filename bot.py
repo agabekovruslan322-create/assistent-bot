@@ -17,7 +17,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "🔵 /add - Добавить цель на завтра.\n"
         "🔵 /list - Полный список целей.\n"
         "🔵 /delete - Удалить цель.\n"
-        "🛠 Бета версия /remid - напоминание целей (🔧находится в разработке🔧).\n"
+        "🛠 Бета версия /remind - напоминание целей (🔧находится в разработке🔧).\n"
     )
     await update.message.reply_text(text)
 
