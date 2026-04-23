@@ -30,11 +30,10 @@ async def today(update, context: ContextTypes.DEFAULT_TYPE):
 
 async def add(update, context):
     user_id = update.message.from_user.id 
-    text = " ".join(context.args)
 
-    result = add_todays_goal(user_id, text)
+    goal_text = " ".join(context.args)
 
-    if not context.args:
+    if not goals_text():
         await update.message.reply_text(
             "Напиши цель после команды.\nПример: /add Go to gym"
         )
@@ -42,7 +41,7 @@ async def add(update, context):
 
     goal = " ".join(context.args)
 
-    result = add_todays_goal(user_id, goal)
+    result = add_todays_goal(user_id, goal_text)
 
     await update.message.reply_text(result)
     
