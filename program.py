@@ -19,7 +19,7 @@ def show_goals(user_id):
     conn = connect()
     cursor = conn.cursor()
 
-    cursor.excute(
+    cursor.execute(
         "SELECT text, date FROM goals WHERE user_id=?",
         (user_id)
     )
