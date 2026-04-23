@@ -11,7 +11,7 @@ def create_table():
     CREATE TABLE IF NOT EXISTS goals_v2 (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
-        text TEXTS,
+        text TEXT,
         DELE text 
     )
     """)
