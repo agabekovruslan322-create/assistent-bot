@@ -16,7 +16,7 @@ def add_goal():
 from database import connect
 
 def show_goals(user_id):
-    conn.connect()
+    conn = connect()
     cursor = conn.cursor()
 
     cursor.excute(
