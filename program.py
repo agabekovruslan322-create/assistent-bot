@@ -21,7 +21,7 @@ def show_goals(user_id):
 
     cursor.execute(
         "SELECT text, date FROM goals WHERE user_id=?",
-        (user_id)
+        (user_id,)
     )
 
     rows = cursor.fetchall()
