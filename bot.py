@@ -33,13 +33,11 @@ async def add(update, context):
 
     goal_text = " ".join(context.args)
 
-    if not goals_text():
+    if not goal_text():
         await update.message.reply_text(
             "Напиши цель после команды.\nПример: /add Go to gym"
         )
         return
-
-    goal = " ".join(context.args)
 
     result = add_todays_goal(user_id, goal_text)
 
