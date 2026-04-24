@@ -22,7 +22,7 @@ def show_goals(user_id):
     cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT text, date FROM goals_v3 WHERE user_id=?",
+        "SELECT text, date FROM goals_v4 WHERE user_id=%s",
         (user_id,)
     )
 
@@ -76,7 +76,7 @@ def add_todays_goal(user_id, goal):
     now = datetime.now(tz).strftime("%Y-%m-%d %H:%M")
    
     cursor.execute(
-        "INSERT INTO goals_v3 (user_id, text, date) VALUES (?, ?, ?)",
+        "INSERT INTO goals_v4 (user_id, text, date) VALUES (%s, %s, %s)",
         (user_id, goal, now))
 
     conn.commit()
