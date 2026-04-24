@@ -79,10 +79,7 @@ async def remind(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     arg = context.args[0].lower()
-    
-    if not arg.isdigit():
-        await update.message.reply_text("Введите число!")
-        return
+
     try:
         if arg.endswith('m'):
             minutes = int(arg[:-1])
@@ -101,8 +98,8 @@ async def remind(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.job_queue.run_once(
         send_reminder,
         when=timedelta(minutes=minutes),
-        chat_id=update.message.chat_id
-        name-str(update.message.from_user.id)
+        chat_id=update.message.chat_id,
+        name=str(update.message.from_user.id)
     )
 
     time_text = f"{minutes} минут"
