@@ -74,26 +74,42 @@ async def send_reminder(context: ContextTypes.DEFAULT_TYPE):
     )
 
 async def remind(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    print("ARGS:", context.args)
     if not context.args:
-        await update.message.reply_text("Пример: /remind 10 (минут)")
+        await update.message.reply_text("Пример: /remind 10 (минут) или /remind 1h (час) или /remind 1d (день)")
         return
 
-    arg = context.args[0].strip()
+    arg = context.args[0].lower()
     
     if not arg.isdigit():
         await update.message.reply_text("Введите число!")
         return
-
-    minutes = int(context.args[0])
+    try:
+        if arg.endswith('m'):
+            minutes = int(arg[:-1])
+        elif arg.endswith('h'):
+            minutes = int(arg[:-1]) * 60
+        elif arg.endswith('d'):
+            minutes = int(arg[:-1]) * 1440
+        elif arg.isdigit():
+            minutes = int(arg)
+        else:
+            raise ValueError
+    except ValueError:
+        await update.message.reply_text("Используй формат: 10m, 1h или 1d")
+        return
 
     context.job_queue.run_once(
         send_reminder,
         when=timedelta(minutes=minutes),
         chat_id=update.message.chat_id
+        name-str(update.message.from_user.id)
     )
 
-    await update.message.reply_text(f"Напомню через {minutes} минут ⏰")
+    time_text = f"{minutes} минут"
+    if minutes >= 60:
+        time_text = f"{minutes // 60} ч. {minutes % 60} мин."
+
+    await update.message.reply_text(f"Принято! Напомню через {time_text} ⏰")
 
 def main():
     create_table()
