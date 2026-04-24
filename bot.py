@@ -81,6 +81,7 @@ async def remind(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     arg = context.args[0].lower()
+    minutes = 0
 
     try:
         if arg.endswith('m'):
@@ -89,10 +90,29 @@ async def remind(update: Update, context: ContextTypes.DEFAULT_TYPE):
             minutes = int(arg[:-1]) * 60
         elif arg.endswith('d'):
             minutes = int(arg[:-1]) * 1440
+
+        elif ":" in arg:
+            tz = pytz.timezone('Europe/Moscow')
+            now = datetime.now(tz)
+
+            t = datetime.strptime(arg, "%H:%M")
+
+            target_time = tz.localize(datetime(
+                now.year, now.month, now.day, t.hour, t.minute
+            ))
+
+            if target_time < now:
+                target_time += timedelta(days=1)
+
+            diff = target_time - now
+            minutes = int(diff.total_seconds() / 60)
+
         elif arg.isdigit():
             minutes = int(arg)
+
         else:
             raise ValueError
+            
     except ValueError:
         await update.message.reply_text("Используй формат: 10m, 1h или 1d")
         return
