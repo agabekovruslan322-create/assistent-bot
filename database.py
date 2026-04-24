@@ -12,8 +12,8 @@ def create_table():
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS goals_v4 (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
+        id SERIAL PRIMARY KEY AUTOINCREMENT,
+        user_id BIGINT,
         text TEXT,
         date text 
     )
