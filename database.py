@@ -1,7 +1,7 @@
 import psycopg2
 import os
 
-DATABASE_URL = "postgresql://postgres:zEtOhYFvUsDHxkMAFtdratYjfHuJaqvF@postgres.railway.internal:5432/railway"
+DATABASE_URL = "postgresql://postgres:zEtOhYFvUsDHxkMAFtdratYjfHuJaqvF@shuttle.proxy.rlwy.net:16580/railway"
 
 def connect():
     return psycopg2.connect(DATABASE_URL, sslmode='require')
@@ -21,4 +21,4 @@ def create_table():
 
     conn.commit()
     conn.close()
-    print("Облачная база Synora v4 sготова!")
+    print("Облачная база Synora v4 готова!")
