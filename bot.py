@@ -69,7 +69,7 @@ async def delete_goals(update, context):
 
     except ValueError:
         await update.message.reply_text("Введите номер цели цифрами!")
-
+    except Exception as e:
         print(f"ОШИБКА В DELETE: {e}")
         await update.message.reply_text("Что-то пошло не так при удалении...")
 
