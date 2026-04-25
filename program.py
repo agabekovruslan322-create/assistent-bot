@@ -135,7 +135,8 @@ def delete_goals(user_id, text):
     ids_to_delete = []
     for idx in indicies:
         if 1 <= idx <= len (all_rows):
-            ids_to_delete.append(all_rows[idx-1][0])
+            real_id = all_rows[idx-1][0]
+            ids_to_delete.append(real_id)
 
     if not ids_to_delete:
         conn.close()
