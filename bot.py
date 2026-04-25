@@ -16,7 +16,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = (
         "Здравствуйте! Я ваш ассистент. 🚀\n\n"
         "Команды:\n"
-        "🔵 /start - Меню."
+        "🔵 /start - Меню.\n"
         "🔵 /today - Показать цели на сегодня.\n"
         "🔵 /add - Добавить цель на завтра.\n"
         "🔵 /list - Полный список целей.\n"
