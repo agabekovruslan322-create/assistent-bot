@@ -114,27 +114,28 @@ def get_todays_goal(user_id):
 
 
 def delete_goals(user_id, index):
-    filename = f"goals_{user_id}.txt"
+    conn = connect()
+    cursor = conn.cursor()
 
-    try:
-        with open(filename, "r") as file:
-            lines = file.readlines()
+    cursor.execute(
+        "SELECT id FROM goals_v4 WHERE user_id=%s ORDER BY id ASC",
+        (user_id,)
+    )
+    rows = cursor.fetchall()
 
-        if not lines:
-            return "Список пуст!"
+    if not rows or index < 1 or index > len(rows):
+        conn.close()
+        return "Неверный номер цели. Смотри внимательнее в /list."
 
-        if index < 1 or index > len(lines):
-            return "Неверный номер!"
+    target_id = rows[index - 1][0]
 
-        deleted = lines.pop(index - 1)
+    cursor.execute("DELETE FROM goals_v4 WHERE id=%s", (target_id))
 
-        with open(filename, "w") as file:
-            file.writelines(lines)
+    conn.commit()
+    conn.close()
 
-            return f"Удалено: {deleted.strip()}"
-    except FileNotFoundError:
-        return "Список пуст!"
-
+    return f"Цель №{index} стерта из времени. Ты вернул себе контроль."
+    
 def exit_program():
     print("Goodbye!")
     exit()

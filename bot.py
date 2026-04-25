@@ -16,6 +16,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = (
         "Здравствуйте! Я ваш ассистент. 🚀\n\n"
         "Команды:\n"
+        "🔵 /start - Меню."
         "🔵 /today - Показать цели на сегодня.\n"
         "🔵 /add - Добавить цель на завтра.\n"
         "🔵 /list - Полный список целей.\n"
@@ -53,23 +54,14 @@ async def list_goals(update: Update, context: ContextTypes.DEFAULT_TYPE):
     result = show_goals(user_id)
     await update.message.reply_text(result)
 
-async def delete(update, context):
-    print("ARGS:", context.args)
-    user_id = update.message.from_user.id 
-
-    if not context.args:
-        await update.message.reply_text("Пример /delete 1")
-        return
-
+async def delete_goals(update, context):
     try:
         index = int(context.args[0])
         result = delete_goals(user_id, index)
         await update.message.reply_text(result)
-    except:
-        await update.message.reply_text("Введите номер цели!")
-        return
+    except ValueError:
+        await update.message.reply_text("Введите номер цели цифрами!")
 
-from datetime import timedelta
 
 async def send_reminder(context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(
