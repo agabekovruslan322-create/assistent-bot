@@ -20,7 +20,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "🔵 /add - Добавить цель на завтра.\n"
         "🔵 /list - Полный список целей.\n"
         "🔵 /delete - Удалить цель.\n"
-        "🛠 Бета версия /remind - напоминание целей (🔧находится в разработке🔧).\n"
+        "🔵 /remind - напоминание целей.\n"
     )
     await update.message.reply_text(text)
 
@@ -29,7 +29,7 @@ async def today(update, context: ContextTypes.DEFAULT_TYPE):
     
     result = get_todays_goal(user_id)
     print(f"DEBUG: Result for user {user_id} is: {result}")
-    
+
     await update.message.reply_text(result)
 
 async def add(update, context):
