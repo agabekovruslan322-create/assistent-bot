@@ -22,6 +22,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "🔵 /list - Полный список целей.\n"
         "🔵 /delete - Удалить цель.\n"
         "🔵 /remind - напоминание целей.\n"
+        "🔵 /multi - Добавление нескольких целей подряд.\n"
     )
     await update.message.reply_text(text)
 
@@ -134,6 +135,18 @@ async def remind(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(f"Принято! Напомню через {time_text} ⏰")
 
+async def multi(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.message.from_user.id
+
+    all_text = " ".join(context.args)
+
+    if not all_text:
+        await update.message.reply_text("Пример: /multi Цель 1; Цель 2; Цель 3")
+
+    result = add_multi_goals(user_id, all_text)
+
+    await update.message.reply_text(result)
+
 def main():
     create_table()
 
@@ -145,6 +158,7 @@ def main():
     app.add_handler(CommandHandler("add", add))
     app.add_handler(CommandHandler("delete", delete))
     app.add_handler(CommandHandler("remind", remind))
+    app.add_handler(CommandHandler("multi", multi))
 
     app.run_polling()
 

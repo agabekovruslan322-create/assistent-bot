@@ -136,7 +136,16 @@ def delete_goals(user_id, index):
 
     return f"Цель №{index} стерта из времени. Освободившееся время — это ресурс. Как ты распорядишься им теперь?"
 
-def exit_program():
-    print("Goodbye!")
-    exit()
+def add_multi_goals(user_id, text):
+    if not text.strip():
+        return "Список пуст."
+    
+    goals = [g.strip() for g in text.split(";") if g.strip()]
 
+    if not goals:
+        return "Не нашел целей. Используй ';' как разделитель."
+
+    for goal in goals:
+        add_todays_goal(user_id, goal)
+
+    return f"Система приняла {len(goals)} новых инструментов власти. Действуй." 
