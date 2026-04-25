@@ -134,7 +134,7 @@ def delete_goals(user_id, index):
     conn.commit()
     conn.close()
 
-    return f"Цель №{index} стерта из времени. Ты вернул себе контроль."
+    return f"Цель №{index} стерта из времени. Освободившееся время — это ресурс. Как ты распорядишься им теперь?"
 
 def exit_program():
     print("Goodbye!")
