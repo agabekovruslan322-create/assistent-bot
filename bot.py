@@ -66,9 +66,12 @@ async def delete_goals(update, context):
         index = int(context.args[0])
         result = delete_goals(user_id, index)
         await update.message.reply_text(result)
+
     except ValueError:
         await update.message.reply_text("Введите номер цели цифрами!")
 
+        print(f"ОШИБКА В DELETE: {e}")
+        await update.message.reply_text("Что-то пошло не так при удалении...")
 
 async def send_reminder(context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(
