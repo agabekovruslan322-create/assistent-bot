@@ -55,6 +55,8 @@ async def list_goals(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(result)
 
 async def delete_goals(update, context):
+    user_id = update.message.form_user.id
+    
     try:
         index = int(context.args[0])
         result = delete_goals(user_id, index)
