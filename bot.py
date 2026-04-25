@@ -28,6 +28,8 @@ async def today(update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id 
     
     result = get_todays_goal(user_id)
+    print(f"DEBUG: Result for user {user_id} is: {result}")
+    
     await update.message.reply_text(result)
 
 async def add(update, context):

@@ -92,7 +92,7 @@ def get_todays_goal(user_id):
     conn = connect()
     cursor = conn.cursor()
 
-    tz = pytz.timezone('Erope/Moscow')
+    tz = pytz.timezone('Europe/Moscow')
     today_str = datetime.now(tz).strftime("%Y-%m-%d")
 
     cursor.execute(
@@ -100,7 +100,7 @@ def get_todays_goal(user_id):
         (user_id, f"{today_str}%")
     )
 
-    rows - cursor.fetchall()
+    rows = cursor.fetchall()
     conn.close()
 
     if not rows:
