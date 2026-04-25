@@ -119,7 +119,7 @@ def delete_goals(user_id, text):
 
     cursor.execute(
         "SELECT id FROM goals_v4 WHERE user_id=%s ORDER BY id ASC", (user_id,))
-    all_rows = cursor.fetchall()
+        all_rows = cursor.fetchall()
 
     if not all_rows:
         conn.close()
