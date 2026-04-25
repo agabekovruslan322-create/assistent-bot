@@ -129,13 +129,13 @@ def delete_goals(user_id, index):
 
     target_id = rows[index - 1][0]
 
-    cursor.execute("DELETE FROM goals_v4 WHERE id=%s", (target_id))
+    cursor.execute("DELETE FROM goals_v4 WHERE id=%s", (target_id,))
 
     conn.commit()
     conn.close()
 
     return f"Цель №{index} стерта из времени. Ты вернул себе контроль."
-    
+
 def exit_program():
     print("Goodbye!")
     exit()

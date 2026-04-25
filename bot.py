@@ -54,7 +54,7 @@ async def list_goals(update: Update, context: ContextTypes.DEFAULT_TYPE):
     result = show_goals(user_id)
     await update.message.reply_text(result)
 
-async def delete_goals(update, context):
+async def delete(update, context):
 
     if not context.args:
         await update.message.reply_text("Пример: /delete 1")
@@ -143,7 +143,7 @@ def main():
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("today", today))
     app.add_handler(CommandHandler("add", add))
-    app.add_handler(CommandHandler("delete", delete_goals))
+    app.add_handler(CommandHandler("delete", delete))
     app.add_handler(CommandHandler("remind", remind))
 
     app.run_polling()
