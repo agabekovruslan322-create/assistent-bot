@@ -64,7 +64,7 @@ async def delete(update, context):
     user_id = update.message.from_user.id 
 
     try:
-        all_text = " ".join(context.args[0])
+        all_text = " ".join(context.args)
         result = delete_goals(user_id, all_text)
         await update.message.reply_text(result)
 
