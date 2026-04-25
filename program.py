@@ -31,11 +31,12 @@ def show_goals(user_id):
     conn.close()
 
     if not rows:
-        return "Список пуст"
+        return "Твой список пуст. Время течет сквозь пальцы, пока ты бездействуешь..."
     
-    result = ""
+    result = "⚔️ Твои инструменты власти над временем:\n\n"
     for i,(text, date) in enumerate(rows, start=1):
-        result += f"{i}. {text} | {date}\n"
+        clean_date = date.split()[1] if "" in date else date
+        result += f"{i}. {text} | {clean_date}\n"
         
     return result
 
@@ -84,30 +85,33 @@ def add_todays_goal(user_id, goal):
 
     return "Цель добавлена!"
 
+import pytz
+from datetime import datetime
+
 def get_todays_goal(user_id):
-    filename = f"goals_{user_id}.txt"
-    today = datetime.now().strftime("%Y-%m-%d")
+    conn = connect()
+    cursor = conn.cursor()
 
-    try:
-        with open(filename, "r") as file:
-            lines = file.readlines()
+    tz = pytz.timezone('Erope/Moscow')
+    today_str = datetime.now(tz).strftime("%Y-%m-%d")
 
-        result = ""
+    cursor.execute(
+        "SELECT text FROM goals_v4 WHERE user_id=%s AND date LIKE %s",
+        (user_id, f"{today_str}%")
+    )
 
-        for line in lines:
-            if "|" not in line:
-                continue
+    rows - cursor.fetchall()
+    conn.close()
 
-            goal, date = line.strip().split("|")
-            date = date.strip().split()[0]
+    if not rows:
+        return "На сегодня целей нет. Ты свободен или просто забыл про мечты?"
 
-            if date == today:
-                result += f"• {goal.strip()}\n"
+    result = f"📅 Твой план на сегодня ({today_str}):\n"
+    for text in rows:
+        result += f"• {text[0]}\n"
 
-        return result if result else "На сегодня целей нет!"
+    return result
 
-    except FileNotFoundError:
-        return "Целей пока нет!"
 
 def delete_goals(user_id, index):
     filename = f"goals_{user_id}.txt"
