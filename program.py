@@ -118,23 +118,34 @@ def delete_goals(user_id, index):
     cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT id FROM goals_v4 WHERE user_id=%s ORDER BY id ASC",
-        (user_id,)
-    )
-    rows = cursor.fetchall()
+        "SELECT id FROM goals_v4 WHERE user_id=%s ORDER BY id ASC", (user_id))
+    all_rows = cursor.fetchall()
 
-    if not rows or index < 1 or index > len(rows):
+    if not all_rows:
         conn.close()
-        return "Неверный номер цели. Смотри внимательнее в /list."
+        return "Список и так пуст."
+    
+    try:
+        indicies = [int(i) for i in text.replace(",", " ").split() if i.isdigit()]
+    except:
+        conn.close()
+        return "Используй формат: /delete 1, 2, 3"
 
-    target_id = rows[index - 1][0]
+    ids_to_delete = []
+    for idx in indicies:
+        if 1 <= idx <= len (all_rows):
+            ids_to_delete.append(all_rows[idx-1][0])
 
-    cursor.execute("DELETE FROM goals_v4 WHERE id=%s", (target_id,))
+    if not ids_to_delete:
+        conn.close()
+        return "Не нашел целей с такими номерами."
+
+    cursor.execute("DELETE FROM goals_v4 WHERE id IN %s", (turple(ids_to_delete),))
 
     conn.commit()
     conn.close()
 
-    return f"Цель №{index} стерта из времени. Освободившееся время — это ресурс. Как ты распорядишься им теперь?"
+    return f"Удалено целей: {len(ids_to_delete)}. Освободившееся время — это ресурс. Как ты распорядишься им теперь?"
 
 def add_multi_goals(user_id, text):
     if not text.strip():
