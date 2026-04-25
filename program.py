@@ -113,12 +113,12 @@ def get_todays_goal(user_id):
     return result
 
 
-def delete_goals(user_id, index):
+def delete_goals(user_id, text):
     conn = connect()
     cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT id FROM goals_v4 WHERE user_id=%s ORDER BY id ASC", (user_id))
+        "SELECT id FROM goals_v4 WHERE user_id=%s ORDER BY id ASC", (user_id,))
     all_rows = cursor.fetchall()
 
     if not all_rows:

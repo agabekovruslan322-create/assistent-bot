@@ -64,8 +64,8 @@ async def delete(update, context):
     user_id = update.message.from_user.id 
 
     try:
-        index = int(context.args[0])
-        result = delete_goals(user_id, index)
+        all_indicies = " ".join(context.args[0])
+        result = delete_goals(user_id, all_indicies)
         await update.message.reply_text(result)
 
     except ValueError:
