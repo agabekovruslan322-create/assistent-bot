@@ -106,9 +106,9 @@ def get_todays_goal(user_id):
     if not rows:
         return "На сегодня целей нет. Ты свободен или просто забыл про мечты?"
 
-    result = f"📅 Твой план на сегодня ({today_str}):\n"
-    for text in rows:
-        result += f"• {text[0]}\n"
+    result = f"📅 Твой план на сегодня ({today_str}):\n\n"
+    for i, (text,) in enumerate(rows, start=1):
+        result += f"{i}. {text}\n"
 
     return result
 
