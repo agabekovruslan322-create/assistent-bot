@@ -93,7 +93,7 @@ def get_todays_goal(user_id):
     cursor = conn.cursor()
 
     tz = pytz.timezone('Europe/Moscow')
-    today_str = datetime.now(tz).strftime("%m-%d")
+    today_str = datetime.now(tz).strftime("%Y-%m-%d")
 
     cursor.execute(
         "SELECT text FROM goals_v4 WHERE user_id=%s AND date LIKE %s",
