@@ -140,7 +140,7 @@ def delete_goals(user_id, index):
         conn.close()
         return "Не нашел целей с такими номерами."
 
-    cursor.execute("DELETE FROM goals_v4 WHERE id IN %s", (turple(ids_to_delete),))
+    cursor.execute("DELETE FROM goals_v4 WHERE id IN %s", (tuple(ids_to_delete),))
 
     conn.commit()
     conn.close()
