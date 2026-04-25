@@ -35,8 +35,8 @@ def show_goals(user_id):
     
     result = "⚔️ Твои инструменты власти над временем:\n\n"
     for i,(text, date) in enumerate(rows, start=1):
-        clean_date = date.split()[1] if "" in date else date
-        result += f"{i}. {text} | {clean_date}\n"
+        pretty_date = date[5:]
+        result += f"{i}. {text} | {pretty_date}\n"
         
     return result
 
