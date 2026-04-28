@@ -1,4 +1,3 @@
-# Synora Project: Migration to @TheSynoraBot
 import requests
 import pytz
 from datetime import datetime, timedelta
@@ -24,6 +23,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "🔵 /delete - Удалить цель.\n"
         "🔵 /remind - напоминание целей.\n"
         "🔵 /multi - Добавление нескольких целей подряд.\n"
+        "🔵 /edit - Отредактировать цель\n"
     )
     await update.message.reply_text(text)
 
