@@ -22,21 +22,20 @@ def show_goals(user_id):
     cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT text, date FROM goals_v4 WHERE user_id=%s",
+        "SELECT id, text, date FROM goals_v4 WHERE user_id=%s",
         (user_id,)
     )
 
     rows = cursor.fetchall()
-
     conn.close()
 
     if not rows:
         return "Твой список пуст. Время течет сквозь пальцы, пока ты бездействуешь..."
     
     result = "⚔️ Твои инструменты власти над временем:\n\n"
-    for i,(text, date) in enumerate(rows, start=1):
+    for gaol_id, text, date in rows:
         pretty_date = date[5:]
-        result += f"{i}. {text} | {pretty_date}\n"
+        result += f"🆔 `{goal_id}` | {text} | {pretty_date}\n"
         
     return result
 
