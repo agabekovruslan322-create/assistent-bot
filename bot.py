@@ -147,6 +147,29 @@ async def multi(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(result)
 
+async def edit_goal(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+
+    if not context.args or len(context.args) < 2:
+        await update.message.reply_text("⚠️ Формат: `/edit [ID] [новый текст]`")
+        return
+
+    try:
+        goal_id = int(context.args[0])
+        new_text = " ".join(context.args[1:])
+
+        success = update_goal_text(goal_id, user_id, new_text)
+
+        if success:
+            await update.message.reply_text(f"✅ Задача №{goal_id} обновлена.")
+        else:
+            await update.message.reply_text("❌ Задача не найдена.")
+
+    except ValueError:
+        await update.message.reply_text("❌ ID должен быть числом.")
+
+     
+
 def main():
     create_table()
 
@@ -159,6 +182,7 @@ def main():
     app.add_handler(CommandHandler("delete", delete))
     app.add_handler(CommandHandler("remind", remind))
     app.add_handler(CommandHandler("multi", multi))
+    app.add_handler(CommandHandler("edit", edit_goal))
 
     app.run_polling()
 

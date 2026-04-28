@@ -160,4 +160,20 @@ def add_multi_goals(user_id, text):
     for goal in goals:
         add_todays_goal(user_id, goal)
 
-    return f"Система приняла {len(goals)} новых инструментов власти. Действуй." 
+    return f"Система приняла {len(goals)} новых инструментов власти. Действуй."
+
+def update_goal_text(goals_id, user_id, new_text):
+    conn = connect()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "UPDATE goals_v4 SET text = %s WHERE id = %s AND user_id = %s",
+        (new_text, goal_id, user_id)
+    ) 
+
+    updated_rows = cursor.rowcount
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return updated_rows > 0
