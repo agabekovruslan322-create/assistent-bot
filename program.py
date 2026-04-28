@@ -143,17 +143,18 @@ def delete_goals(goal_id, user_id):
     
 def add_multi_goals(user_id, text):
     if not text.strip():
-        return "Список пуст."
+        return "❌ Список пуст."
     
-    goals = [g.strip() for g in text.split(";") if g.strip()]
+    import re
+    goals = [g.strip() for g in re.split(';|\n', text) if g.strip()]
 
     if not goals:
-        return "Не нашел целей. Используй ';' как разделитель."
+        return "❌ Не нашел целей. Используй ';' или новую строку."
 
     for goal in goals:
         add_todays_goal(user_id, goal)
 
-    return f"Система приняла {len(goals)} новых инструментов власти. Действуй."
+    return f"⚡️ Система приняла {len(goals)} новых инструментов власти. Действуй."
 
 def update_goal_text(goal_id, user_id, new_text):
     conn = connect()

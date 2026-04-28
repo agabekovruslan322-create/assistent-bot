@@ -138,11 +138,11 @@ async def remind(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def multi(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
-
     all_text = " ".join(context.args)
 
     if not all_text:
-        await update.message.reply_text("Пример: /multi Цель 1; Цель 2; Цель 3")
+        await update.message.reply_text("💡 Пример: /multi Цель 1; Цель 2; Цель 3")
+        return
 
     result = add_multi_goals(user_id, all_text)
 
