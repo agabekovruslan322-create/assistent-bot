@@ -57,23 +57,12 @@ async def list_goals(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(result)
 
 async def delete(update, context):
+    user_id = update.effective_user.id
 
-    if not context.args:
-        await update.message.reply_text("Пример: /delete 1")
-        return
-
-    user_id = update.message.from_user.id 
-
-    try:
-        all_text = " ".join(context.args)
-        result = delete_goals(" ".join(context.args), user_id)
-        await update.message.reply_text(result)
-
-    except ValueError:
-        await update.message.reply_text("Введите номер цели цифрами!")
-    except Exception as e:
-        print(f"ОШИБКА В DELETE: {e}")
-        await update.message.reply_text("Что-то пошло не так при удалении...")
+    user_input = " ".join(context.args)
+    
+    result = delete_goals(user_input, user_id)
+    await update.message.reply_text(result)
 
 async def send_reminder(context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(

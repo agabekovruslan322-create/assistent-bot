@@ -146,7 +146,7 @@ def add_multi_goals(user_id, text):
         return "❌ Список пуст."
     
     import re
-    goals = [g.strip() for g in re.split(';|\n', text) if g.strip()]
+    goals = [g.strip() for g in text.split(";") if g.strip()]
 
     if not goals:
         return "❌ Не нашел целей. Используй ';' или новую строку."
