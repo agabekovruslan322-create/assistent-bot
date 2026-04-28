@@ -112,42 +112,35 @@ def get_todays_goal(user_id):
     return result
 
 
-def delete_goals(user_id, text):
+def delete_goals(goal_id, user_id):
     conn = connect()
     cursor = conn.cursor()
 
-    cursor.execute(
-        "SELECT id FROM goals_v4 WHERE user_id=%s ORDER BY id ASC", (user_id,)
-        )
-    all_rows = cursor.fetchall()
-
-    if not all_rows:
-        conn.close()
-        return "Список и так пуст."
-    
     try:
-        indicies = [int(i) for i in text.replace(",", " ").split() if i.isdigit()]
-    except:
+        ids-to_delete = [int(i) for i in ids_text.replace(",", " ").split() if i.isdigit()]
+
+        if not ids_to_delete:
+            return: "❌ Укажи ID через пробел или запятую. Пример: /delete 30 31"
+
+        cursor.execute(
+            "DELETE FROM goals_v4 WHERE user_id = %s AND id IN %s",
+            (user_id, tuple(ids_to_delete))
+        )
+
+        delete_count = cursor.rowcount
+        conn.commit()
+    
+    except Exception as e:
         conn.close()
-        return "Используй формат: /delete 1, 2, 3"
-
-    ids_to_delete = []
-    for idx in indicies:
-        if 1 <= idx <= len (all_rows):
-            real_id = all_rows[idx-1][0]
-            ids_to_delete.append(real_id)
-
-    if not ids_to_delete:
-        conn.close()
-        return "Не нашел целей с такими номерами."
-
-    cursor.execute("DELETE FROM goals_v4 WHERE id IN %s", (tuple(ids_to_delete),))
-
-    conn.commit()
+        return f"☢️ Ошибка базы: {e}"
+    
     conn.close()
 
-    return f"Удалено целей: {len(ids_to_delete)}. Освободившееся время — это ресурс. Как ты распорядишься им теперь?"
-
+    if delete_count > 0:
+        return f"✅ Удалено целей: {deleted_count}. Архитектор очистил пространство для нового."
+    else:
+        return "❌ Не нашел целей с такими ID в твоем списке."
+    
 def add_multi_goals(user_id, text):
     if not text.strip():
         return "Список пуст."
