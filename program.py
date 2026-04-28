@@ -33,7 +33,7 @@ def show_goals(user_id):
         return "Твой список пуст. Время течет сквозь пальцы, пока ты бездействуешь..."
     
     result = "⚔️ Твои инструменты власти над временем:\n\n"
-    for gaol_id, text, date in rows:
+    for goal_id, text, date in rows:
         pretty_date = date[5:]
         result += f"🆔 `{goal_id}` | {text} | {pretty_date}\n"
         
