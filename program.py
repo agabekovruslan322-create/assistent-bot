@@ -120,7 +120,7 @@ def delete_goals(goal_id, user_id):
         ids_to_delete = [int(i) for i in ids_text.replace(",", " ").split() if i.isdigit()]
 
         if not ids_to_delete:
-            return: "❌ Укажи ID через пробел или запятую. Пример: /delete 30 31"
+            return "❌ Укажи ID через пробел или запятую. Пример: /delete 30 31"
 
         cursor.execute(
             "DELETE FROM goals_v4 WHERE user_id = %s AND id IN %s",
