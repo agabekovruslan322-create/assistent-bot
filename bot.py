@@ -1,3 +1,4 @@
+# Synora Project: Migration to @TheSynoraBot
 import requests
 import pytz
 from datetime import datetime, timedelta
@@ -10,7 +11,7 @@ from database import create_table
 
 from program import get_todays_goal, add_todays_goal, show_goals, delete_goals, add_multi_goals, update_goal_text
 
-TOKEN = "8680262922:AAHNveyzRB_Gl4ZbFxq1JlceRXf8xQIeK3Q"
+TOKEN = "8369516325:AAGzPd5OpuyMPYr_wGP3dKjXf7BZ1wqBjt8"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = (
