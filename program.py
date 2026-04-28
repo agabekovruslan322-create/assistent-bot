@@ -112,7 +112,7 @@ def get_todays_goal(user_id):
     return result
 
 
-def delete_goals(goal_id, user_id):
+def delete_goals(ids_text, user_id):
     conn = connect()
     cursor = conn.cursor()
 
@@ -137,7 +137,7 @@ def delete_goals(goal_id, user_id):
     conn.close()
 
     if delete_count > 0:
-        return f"✅ Удалено целей: {deleted_count}. Архитектор очистил пространство для нового."
+        return f"✅ Удалено целей: {delete_count}. Архитектор очистил пространство для нового."
     else:
         return "❌ Не нашел целей с такими ID в твоем списке."
     
