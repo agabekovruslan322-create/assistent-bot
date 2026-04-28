@@ -162,7 +162,7 @@ def add_multi_goals(user_id, text):
 
     return f"Система приняла {len(goals)} новых инструментов власти. Действуй."
 
-def update_goal_text(goals_id, user_id, new_text):
+def update_goal_text(goal_id, user_id, new_text):
     conn = connect()
     cursor = conn.cursor()
 
