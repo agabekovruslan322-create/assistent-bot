@@ -117,7 +117,7 @@ def delete_goals(goal_id, user_id):
     cursor = conn.cursor()
 
     try:
-        ids-to_delete = [int(i) for i in ids_text.replace(",", " ").split() if i.isdigit()]
+        ids_to_delete = [int(i) for i in ids_text.replace(",", " ").split() if i.isdigit()]
 
         if not ids_to_delete:
             return: "❌ Укажи ID через пробел или запятую. Пример: /delete 30 31"
