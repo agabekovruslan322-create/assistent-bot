@@ -11,7 +11,7 @@ from database import create_table
 
 from program import get_todays_goal, add_todays_goal, show_goals, delete_goals, add_multi_goals, update_goal_text
 
-TOKEN = os.getenv("BOT_TOKEN")
+TOKEN = os.getenv("BOT")
 
 if not TOKEN:
     print("Ошибка: Переменная BOT_TOKEN не найдена")
