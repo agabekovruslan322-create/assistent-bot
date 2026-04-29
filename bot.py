@@ -1,3 +1,4 @@
+import os
 import requests
 import pytz
 from datetime import datetime, timedelta
@@ -10,7 +11,11 @@ from database import create_table
 
 from program import get_todays_goal, add_todays_goal, show_goals, delete_goals, add_multi_goals, update_goal_text
 
-TOKEN = "8369516325:AAGzPd5OpuyMPYr_wGP3dKjXf7BZ1wqBjt8"
+TOKEN = os.getenv("BOT_TOKEN")
+
+if not TOKEN:
+    print("Ошибка: Переменная BOT_TOKEN не найдена")
+    exit(1)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = (
