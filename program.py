@@ -22,7 +22,7 @@ def show_goals(user_id):
     cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT id, text, date, FROM is_completed WHERE user_id=%s ORDER BY id ASC",
+        "SELECT id, text, date, is_completed FROM goals_v4 WHERE user_id=%s ORDER BY id ASC",
         (user_id,)
     )
 
@@ -182,7 +182,7 @@ def update_goal_text(goal_id, user_id, new_text):
             (goal_id, user_id)
         )
 
-        row = cursor.fetchall()
+        row = cursor.fetchone()
         conn.commit()
         cursor.close()
         conn.close()

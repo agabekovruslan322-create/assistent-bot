@@ -26,7 +26,8 @@ def create_table():
 def create_table():
     conn = connect()
     cursor = conn.cursor()
-      
+    
+    cursor.execute("DROP TABLE EXISTS goals_v4 CASCADE;")
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS goals_v4 (
         id SERIAL PRIMARY KEY,
@@ -36,3 +37,7 @@ def create_table():
         is_completed BOOLEAN DEFAULT FALSE
     )
     """)
+
+    conn.commit()
+    conn.close()
+    print("База полность пересоздана!")
