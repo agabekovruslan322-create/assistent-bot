@@ -1,6 +1,7 @@
 import psycopg2
 import os
 
+ALTER TABLE goals_v4 ADD COLUMN is_completed BOOLEAN DEFAULT FALSE;
 DATABASE_URL = "postgresql://postgres:zEtOhYFvUsDHxkMAFtdratYjfHuJaqvF@shuttle.proxy.rlwy.net:16580/railway"
 
 def connect():
@@ -22,3 +23,17 @@ def create_table():
     conn.commit()
     conn.close()
     print("Облачная база Synora v4 готова!")
+
+def create_table():
+    conn = connect()
+    cursor = conn.cursor()
+      
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS goals_v4 (
+        id SERIAL PRIMARY KEY,
+        user_id BIGINT,
+        text TEXT,
+        date TEXT,
+        is_completed BOOLEAN DEFAULT FALSE
+    )
+    """)

@@ -163,7 +163,24 @@ async def edit_goal(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except ValueError:
         await update.message.reply_text("❌ ID должен быть числом.")
 
+async def done(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+
+    if not context.args:
+        await update.message.reply_text("Укажи ID задачи. Пример: /done 7")
+
+    try:
+        goal_id = int(context.args[0])
+        from program import complete_goal
+        task_text = complete_goal(goal_id, user_id)
+
+        if task_text:
+            await update.message.reply_text(f"🔥 **Триумф!**\nЗадача «{task_text}» выполнена. Стоик непоколебим.")
+        else:
+            await update.message.reply_text("Задача не найдена. Возможно, она уже в прошлом или не твоя.")
      
+     except ValueError:
+        await update.message.reply_text("ID должен быть числом мой друг.")
 
 def main():
     create_table()
@@ -178,6 +195,7 @@ def main():
     app.add_handler(CommandHandler("remind", remind))
     app.add_handler(CommandHandler("multi", multi))
     app.add_handler(CommandHandler("edit", edit_goal))
+    app.add_handler(CommandHandler("done", done))
 
     app.run_polling()
 

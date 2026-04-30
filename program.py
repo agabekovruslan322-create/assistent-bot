@@ -33,9 +33,10 @@ def show_goals(user_id):
         return "Твой список пуст. Время течет сквозь пальцы, пока ты бездействуешь..."
     
     result = "⚔️ Твои инструменты власти над временем:\n\n"
-    for goal_id, text, date in rows:
-        pretty_date = date[5:]
-        result += f"🆔 `{goal_id}` | {text} | {pretty_date}\n"
+    for goal_id, text, date, is_completed in rows:
+        status = "✅" if is_completed else "⏳"
+        pretty_date = date[5:10]
+        result += f"{status} 🆔 `{goal_id}` | {text} | {pretty_date}\n"
         
     return result
 
@@ -171,3 +172,19 @@ def update_goal_text(goal_id, user_id, new_text):
     conn.close()
 
     return updated_rows > 0
+
+    def complete_goal(goal_id, user_id):
+        conn = connect()
+        cursor = conn.cursor()
+        
+        cursor.execute(
+            "UPDATE goals_v4 SET is_completed = TRUE WHERE id = %s AND user_id = %s RETURNING text",
+            (goal_id, user_id)
+        )
+
+        row = cursor.fetchall()
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        return row[0] if row else None
