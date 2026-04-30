@@ -8,6 +8,7 @@ print(requests.get("https://api.telegram.org").status_code)
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from database import create_table
+from telegram.ext import ConversationHandler, MessageHandler, filters
 
 from program import get_todays_goal, add_todays_goal, show_goals, delete_goals, add_multi_goals, update_goal_text
 
@@ -179,7 +180,7 @@ async def done(update: Update, context: ContextTypes.DEFAULT_TYPE):
         else:
             await update.message.reply_text("Задача не найдена. Возможно, она уже в прошлом или не твоя.")
      
-     except ValueError:
+    except ValueError:
         await update.message.reply_text("ID должен быть числом мой друг.")
 
 def main():
