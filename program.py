@@ -188,3 +188,39 @@ def complete_goal(goal_id, user_id):
     conn.close()
 
     return row[0] if row else None
+
+def get_user_stats(user_id):
+    conn = connect()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT
+            COUNT(*),
+            SUM(CASE WHEN is_completed THEN 1 ELSE 0 END)
+        FROM goals_v4
+        WHERE user_id = %s
+    """, (user_id,))
+
+    total, completed = cursor.fetchone()
+    conn.close()
+
+    if total == 0:
+        return "Твой путь еще не нача. Добавь первую цель!"
+    
+    completed = completed or 0
+    percent = int((completed / total) * 100)
+
+    bar_lenght = 10
+    filled = int(completed / total * bar_lenght)
+    bar = "🟢" * filled + "⚪" * (bar_lenght - filled)
+
+    return (
+        f"🏛 **Твоя Стоя:**\n\n"
+        f"📊 Прогресс: {percent}%\n"
+        f"[{bar}]\n\n"
+        f"✅ Завершено триумфов: {completed}\n"
+        f"⏳ Всего в работе: {total}\n\n"
+        f"«Не важно, как медленно ты идешь, главное — не останавливаться»."
+    )
+
+    

@@ -182,6 +182,12 @@ async def done(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except ValueError:
         await update.message.reply_text("ID должен быть числом мой друг.")
 
+async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+
+    result = get_user_stats(user_id)
+    await update.message.reply_text(result)
+
 def main():
     create_table()
 
@@ -196,7 +202,7 @@ def main():
     app.add_handler(CommandHandler("multi", multi))
     app.add_handler(CommandHandler("edit", edit_goal))
     app.add_handler(CommandHandler("done", done))
-
+    app.add_handler(CommandHandler("stats", stats))
     app.run_polling()
 
 if __name__ == "__main__":
