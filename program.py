@@ -22,7 +22,7 @@ def show_goals(user_id):
     cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT id, text, date FROM is_completed WHERE user_id=%s ORDER BY id ASC",
+        "SELECT id, text, date, FROM is_completed WHERE user_id=%s ORDER BY id ASC",
         (user_id,)
     )
 
