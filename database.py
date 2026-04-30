@@ -33,6 +33,6 @@ def create_table():
         user_id BIGINT,
         text TEXT,
         date TEXT,
-        is_completed BOOLEAN DEFAULT FALSE
+        is_complete BOOLEAN DEFAULT FALSE
     )
     """)
