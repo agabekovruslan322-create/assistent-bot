@@ -10,7 +10,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from database import create_table
 from telegram.ext import ConversationHandler, MessageHandler, filters
 
-from program import get_todays_goal, add_todays_goal, show_goals, delete_goals, add_multi_goals, update_goal_text, complete_goal
+from program import get_todays_goal, add_todays_goal, show_goals, delete_goals, add_multi_goals, update_goal_text
 
 TOKEN = os.getenv("BOT")
 
@@ -172,6 +172,7 @@ async def done(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     try:
         goal_id = int(context.args[0])
+        from program import complete_goal
         task_text = complete_goal(goal_id, user_id)
 
         if task_text:
