@@ -175,7 +175,7 @@ async def done(update: Update, context: ContextTypes.DEFAULT_TYPE):
         task_text = complete_goal(goal_id, user_id)
 
         if task_text:
-            await update.message.reply_text(f"🔥 **Триумф!**\nЗадача «{task_text}» выполнена. Стоик непоколебим.")
+            await update.message.reply_text(f"🔥 **Триумф!** 🔥\nЗадача «{task_text}» выполнена. Стоик непоколебим.")
         else:
             await update.message.reply_text("Задача не найдена. Возможно, она уже в прошлом или не твоя.")
      
@@ -203,7 +203,7 @@ def main():
     app.add_handler(CommandHandler("edit", edit_goal))
     app.add_handler(CommandHandler("done", done))
     app.add_handler(CommandHandler("stats", stats))
-    
+
     app.run_polling()
 
 if __name__ == "__main__":
