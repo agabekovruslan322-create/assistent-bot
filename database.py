@@ -27,8 +27,8 @@ def create_table():
     conn = connect()
     cursor = conn.cursor()
     
-    cursor.execute("DROP TABLE EXISTS goals_v4 CASCADE;")
-    
+    cursor.execute("DROP TABLE IF EXISTS goals_v4 CASCADE;")
+
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS goals_v4 (
         id SERIAL PRIMARY KEY,
