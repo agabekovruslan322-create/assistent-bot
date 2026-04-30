@@ -203,6 +203,7 @@ def main():
     app.add_handler(CommandHandler("edit", edit_goal))
     app.add_handler(CommandHandler("done", done))
     app.add_handler(CommandHandler("stats", stats))
+    
     app.run_polling()
 
 if __name__ == "__main__":
