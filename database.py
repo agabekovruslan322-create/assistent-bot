@@ -1,7 +1,6 @@
 import psycopg2
 import os
 
-ALTER TABLE goals_v4 ADD COLUMN is_completed BOOLEAN DEFAULT FALSE;
 DATABASE_URL = "postgresql://postgres:zEtOhYFvUsDHxkMAFtdratYjfHuJaqvF@shuttle.proxy.rlwy.net:16580/railway"
 
 def connect():
