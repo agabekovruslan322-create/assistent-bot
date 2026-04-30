@@ -22,7 +22,7 @@ def show_goals(user_id):
     cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT id, text, date FROM goals_v4 WHERE user_id=%s ORDER BY id ASC",
+        "SELECT id, text, date FROM is_completed WHERE user_id=%s ORDER BY id ASC",
         (user_id,)
     )
 
@@ -35,7 +35,7 @@ def show_goals(user_id):
     result = "⚔️ Твои инструменты власти над временем:\n\n"
     for goal_id, text, date, is_completed in rows:
         status = "✅" if is_completed else "⏳"
-        pretty_date = date[5:10]
+        pretty_date = date[5:10] if date else "??-??"
         result += f"{status} 🆔 `{goal_id}` | {text} | {pretty_date}\n"
         
     return result
