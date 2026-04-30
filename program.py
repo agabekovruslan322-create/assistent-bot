@@ -173,18 +173,18 @@ def update_goal_text(goal_id, user_id, new_text):
 
     return updated_rows > 0
 
-    def complete_goal(goal_id, user_id):
-        conn = connect()
-        cursor = conn.cursor()
+def complete_goal(goal_id, user_id):
+    conn = connect()
+    cursor = conn.cursor()
         
-        cursor.execute(
-            "UPDATE goals_v4 SET is_completed = TRUE WHERE id = %s AND user_id = %s RETURNING text",
-            (goal_id, user_id)
-        )
+    cursor.execute(
+        "UPDATE goals_v4 SET is_completed = TRUE WHERE id = %s AND user_id = %s RETURNING text",
+        (goal_id, user_id)
+    )
 
-        row = cursor.fetchone()
-        conn.commit()
-        cursor.close()
-        conn.close()
+    row = cursor.fetchone()
+    conn.commit()
+    cursor.close()
+    conn.close()
 
-        return row[0] if row else None
+    return row[0] if row else None
