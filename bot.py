@@ -10,7 +10,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from database import create_table
 from telegram.ext import ConversationHandler, MessageHandler, filters
 
-from program import get_todays_goal, add_todays_goal, show_goals, delete_goals, add_multi_goals, update_goal_text, complete_goal
+from program import get_todays_goal, add_todays_goal, show_goals, delete_goals, add_multi_goals, update_goal_text, complete_goal, get_user_stats
 
 TOKEN = os.getenv("BOT")
 
@@ -29,7 +29,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "🔵 /delete - Удалить цель.\n"
         "🔵 /remind - напоминание целей.\n"
         "🔵 /multi - Добавление нескольких целей подряд.\n"
-        "🔵 /edit - Отредактировать цель\n"
+        "🔵 /edit - Отредактировать цель.\n"
+        "🔵 /done - Выбрать выполненные цели."
+        "🔵 /stats - Список выполненных целей"
     )
     await update.message.reply_text(text)
 
