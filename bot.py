@@ -205,6 +205,7 @@ def main():
     app.add_handler(CommandHandler("edit", edit_goal))
     app.add_handler(CommandHandler("done", done))
     app.add_handler(CommandHandler("stats", stats))
+    app.add_handler(CommandHandler("status", stats))
 
     app.run_polling()
 

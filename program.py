@@ -126,7 +126,7 @@ def get_user_stats(user_id):
     bar = "🟢" * (percent // 10) + "⚪" * (10 - (percent // 10))
 
     return (
-        f"🏛 **Твой триумф!🔥:**\n\n"
+        f"🏛 **Твой триумф!:**🔥\n\n"
         f"📊 Прогресс: {percent}%\n"
         f"[{bar}]\n\n"
         f"✅ Завершено: {completed}\n"
