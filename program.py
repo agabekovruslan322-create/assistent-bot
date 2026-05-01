@@ -2,7 +2,6 @@ import pytz
 from datetime import datetime
 from database import connect
 
-# --- БЛОК ДОБАВЛЕНИЯ И ПРОСМОТРА ---
 
 def add_todays_goal(user_id, goal):
     conn = connect()
@@ -55,11 +54,10 @@ def show_goals(user_id):
     result = "⚔️ Твои инструменты власти над временем:\n\n"
     for goal_id, text, date, is_completed in rows:
         status = "✅" if is_completed else "⏳"
-        pretty_date = date[5:16] if date else "??-??" # Вывел еще и время (ЧЧ:ММ)
+        pretty_date = date[5:16] if date else "??-??" 
         result += f"{status} 🆔 `{goal_id}` | {text} | {pretty_date}\n"
     return result
 
-# --- БЛОК РЕДАКТИРОВАНИЯ И УДАЛЕНИЯ ---
 
 def delete_goals(ids_text, user_id):
     conn = connect()
@@ -106,8 +104,6 @@ def update_goal_text(goal_id, user_id, new_text):
     conn.close()
     return updated_rows > 0
 
-# --- СТАТИСТИКА ---
-
 def get_user_stats(user_id):
     conn = connect()
     cursor = conn.cursor()
@@ -130,7 +126,7 @@ def get_user_stats(user_id):
     bar = "🟢" * (percent // 10) + "⚪" * (10 - (percent // 10))
 
     return (
-        f"🏛 **Твоя Стоя:**\n\n"
+        f"🏛 **Твой триумф!🔥:**\n\n"
         f"📊 Прогресс: {percent}%\n"
         f"[{bar}]\n\n"
         f"✅ Завершено: {completed}\n"
