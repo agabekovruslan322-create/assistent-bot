@@ -41,23 +41,30 @@ def get_todays_goal(user_id):
 def show_goals(user_id):
     conn = connect()
     cursor = conn.cursor()
-    cursor.execute(
-        "SELECT id, text, date, is_completed FROM goals_v4 WHERE user_id=%s ORDER BY id ASC",
-        (user_id,)
-    )
+    
+    if only_active:
+        query = "SELECT id, text, date FROM goals_v4 WHERE user_id=%s AND is_completed=FALSE ORDER BY id ASC"
+    else:
+        query = "SELECT id, text, date FROM goals_v4 WHERE user_id=%s AND is_completed=TRUE ORDER BY id ASC"
+
+    cursor.execute(query, (user_id,))
     rows = cursor.fetchall()
     conn.close()
 
     if not rows:
         return "Твой список пуст. Время течет сквозь пальцы..."
-    
-    result = "⚔️ Твои инструменты власти над временем:\n\n"
-    for goal_id, text, date, is_completed in rows:
-        status = "✅" if is_completed else "⏳"
-        pretty_date = date[5:16] if date else "??-??" 
-        result += f"{status} 🆔 `{goal_id}` | {text} | {pretty_date}\n"
+
+    title = "⚔️ Актуальные цели:" if only_active else "📜 Архив твоих побед:"
+    result = f"{title}\n\n"
+
+    for goal_id, text, date  in rows:
+        icon = "⏳" if only_active else "🏛"
+        result += f"{icon} 🆔 `{goal_id}` | {text} | {date[5:10]}\n"
+
     return result
 
+def get_history(user_id):
+    return show_goals(user_id, only_active=False)
 
 def delete_goals(ids_text, user_id):
     conn = connect()

@@ -190,6 +190,12 @@ async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
     result = get_user_stats(user_id)
     await update.message.reply_text(result)
 
+async def history(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+
+    result = get_history(user_id)
+    await update.message.reply_text(result)
+
 def main():
     create_table()
 
@@ -206,6 +212,7 @@ def main():
     app.add_handler(CommandHandler("done", done))
     app.add_handler(CommandHandler("stats", stats))
     app.add_handler(CommandHandler("status", stats))
+    app.add_handler(CommandHandler("history", history))
 
     app.run_polling()
 
