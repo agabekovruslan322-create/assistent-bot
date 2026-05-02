@@ -1,6 +1,9 @@
+import re
 import os
 import requests
 import pytz
+import logging
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 from datetime import datetime, timedelta
 
 print(requests.get("https://api.telegram.org").status_code)
@@ -17,6 +20,9 @@ TOKEN = os.getenv("BOT")
 if not TOKEN:
     print("Ошибка: Переменная BOT_TOKEN не найдена")
     exit(1)
+
+async def error_handler(update, context):
+    logging.error(f"Произошла ошибка: {context.error}")
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = (
@@ -46,15 +52,29 @@ async def today(update, context: ContextTypes.DEFAULT_TYPE):
 async def add(update, context):
     user_id = update.message.from_user.id 
 
-    goal_text = " ".join(context.args)
+    raw_text = " ".join(context.args)
 
-    if not goal_text.strip():
+    if not raw_text.strip():
         await update.message.reply_text(
-            "Напиши цель после команды.\nПример: /add Go to gym"
+            "Напиши цель после команды.\nПример: /add Пойти в магазин 19:00"
         )
         return
+    
+    time_pattern = r"(\d{1,2}:\d{2})$"
 
+    match = re.search(time_pattern, raw_text.strip())
+    goal_text = raw_text
+    found_time = None
+
+    if match:
+        found_time = match.group(1)
+        goal_text = raw_text.replace(found_time, "").strip()
+
+    from program import add_todays_goal
     result = add_todays_goal(user_id, goal_text)
+
+    if found_time:
+        result += f"\n⏰ Маяк установлен на {found_time}"
 
     await update.message.reply_text(result)
     
@@ -200,6 +220,8 @@ def main():
     create_table()
 
     app = ApplicationBuilder().token(TOKEN).build()
+
+    app.add_error_handler(error_handler)
 
     app.add_handler(CommandHandler("list", list_goals))
     app.add_handler(CommandHandler("start", start))
