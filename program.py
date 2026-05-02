@@ -38,7 +38,7 @@ def get_todays_goal(user_id):
         result += f"{i}. {text}\n"
     return result
 
-def show_goals(user_id):
+def show_goals(user_id, only_active=True):
     conn = connect()
     cursor = conn.cursor()
     
