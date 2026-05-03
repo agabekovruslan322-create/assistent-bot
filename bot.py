@@ -77,7 +77,7 @@ async def add(update, context):
 
         t = datetime.strptime(found_time, "%H:%M")
         target_time = tz.localize(datetime(
-            now.year, now.month, now.day, t.hour, t,minute
+            now.year, now.month, now.day, t.hour, t.minute
         ))
 
         if target_time < now:
