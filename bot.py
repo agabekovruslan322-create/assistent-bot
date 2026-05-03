@@ -7,6 +7,7 @@ import logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logging.getLogger("apscheduler").setLevel(logging.WARNING)
+
 from datetime import datetime, timedelta
 
 print(requests.get("https://api.telegram.org").status_code)
@@ -85,7 +86,7 @@ async def add(update, context):
             target_time += timedelta(days=1)
         diff = (target_time - now).total_seconds()
 
-        print(f"DEBUG: Маяк сработает через {diff} секунд")
+        logging.info(f">>> Маяк сработает через {diff} секунд")
 
         context.job_queue.run_once(
             send_reminder_with_text,
