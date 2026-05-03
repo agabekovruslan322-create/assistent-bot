@@ -84,6 +84,8 @@ async def add(update, context):
             target_time += timedelta(days=1)
         diff = (target_time - now).total_seconds()
 
+        print(f"DEBUG: Маяк сработает через {diff} секунд")
+
         context.job_queue.run_once(
             send_reminder_with_text,
             when=diff,
