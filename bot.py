@@ -99,7 +99,7 @@ async def add(update, context):
     result = add_todays_goal(user_id, goal_text)
 
     if found_time:
-        return += f"\n⏰ Маяк установлен на {found_time}"
+        result += f"\n⏰ Маяк установлен на {found_time}"
     await update.message.reply_text(result)
 
 async def list_goals(update: Update, context: ContextTypes.DEFAULT_TYPE):
