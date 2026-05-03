@@ -53,7 +53,6 @@ async def today(update, context: ContextTypes.DEFAULT_TYPE):
 
 async def add(update, context):
     user_id = update.message.from_user.id 
-
     raw_text = " ".join(context.args)
 
     if not raw_text.strip():
@@ -71,15 +70,38 @@ async def add(update, context):
     if match:
         found_time = match.group(1)
         goal_text = raw_text.replace(found_time, "").strip()
+    
+    try:
+        tz = pytz.timezone('Europe/Moscow')
+        now = datetime.now(tz)
+
+        t = datetime.strptime(found_time, "%H:%M")
+        target_time = tz.localize(datetime(
+            now.year, now.month, now.day, t.hour, t,minute
+        ))
+
+        if target_time < now:
+            target_time += timedelta(days=1)
+        diff = (target_time - now).total_seconds()
+
+        context.job_queue.run_once(
+            send_reminder_with_text,
+            when=diff,
+            chat_id=update.message.chat_id,
+            name=f"{user_id}_{found_time}",
+            data=goal_text
+        )
+
+    except Exception as e:
+        logging.error(f"Ошибка при установке маяка {e}")
 
     from program import add_todays_goal
     result = add_todays_goal(user_id, goal_text)
 
     if found_time:
-        result += f"\n⏰ Маяк установлен на {found_time}"
-
+        return += f"\n⏰ Маяк установлен на {found_time}"
     await update.message.reply_text(result)
-    
+
 async def list_goals(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
 
@@ -98,6 +120,12 @@ async def send_reminder(context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(
         chat_id=context.job.chat_id,
         text="⏰ Напоминание! Проверь свои цели!"
+    )
+async def send_reminder_with_text(context: ContextTypes.DEFAULT_TYPE):
+    job = context.job
+    await context.bot.send_message(
+        chat_id=job.chat_id,
+        text=f"⏰ ВРЕМЯ ВЫШЛО!\nТвоя цель: {job.data}\n\nКак успехи? Сделал?"
     )
 
 async def remind(update: Update, context: ContextTypes.DEFAULT_TYPE):
