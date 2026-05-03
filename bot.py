@@ -116,11 +116,6 @@ async def delete(update, context):
     result = delete_goals(user_input, user_id)
     await update.message.reply_text(result)
 
-async def send_reminder(context: ContextTypes.DEFAULT_TYPE):
-    await context.bot.send_message(
-        chat_id=context.job.chat_id,
-        text="⏰ Напоминание! Проверь свои цели!"
-    )
 async def send_reminder_with_text(context: ContextTypes.DEFAULT_TYPE):
     job = context.job
     await context.bot.send_message(
