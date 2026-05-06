@@ -146,4 +146,24 @@ def add_multi_goals(user_id, text):
     for goal in goals:
         add_todays_goal(user_id, goal)
     return f"⚡️ Добавлено целей: {len(goals)}"
+
+def check_vow(user_id):
+    import sqlite3
+    conn = sqlite3.connect('goals.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT 1 FROM vows WHERE user_id = ?", (user_id,))
+    result - cursor.fetchone()
+    conn.close()
+    return result is not None
+
+def add_vow(user_id):
+    import sqlite3
+    conn = sqlite3.connect('goals.db')
+    cursor = conn.cursor()
+    try:
+        cursor.execute("INSERT INTO vows (user_id) VALUES (?)", (user_id,))
+        conn.commit()
+    except:
+        pass
+    conn.close()
     

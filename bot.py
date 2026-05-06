@@ -12,12 +12,12 @@ from datetime import datetime, timedelta
 
 print(requests.get("https://api.telegram.org").status_code)
 
-from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, CallbackQueryHandler
 from database import create_table
 from telegram.ext import ConversationHandler, MessageHandler, filters
 
-from program import get_todays_goal, add_todays_goal, show_goals, delete_goals, add_multi_goals, update_goal_text, complete_goal, get_user_stats, get_history
+from program import get_todays_goal, add_todays_goal, show_goals, delete_goals, add_multi_goals, update_goal_text, complete_goal, get_user_stats, get_history, check_vow, add_vow
 
 TOKEN = os.getenv("BOT")
 
@@ -29,19 +29,40 @@ async def error_handler(update, context):
     logging.error(f"Произошла ошибка: {context.error}")
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+
+    if not check_vow(user_id):
+        manifest_text = (
+            f"Приветствую тебя, {update.effective_user.first_name}. ⚔️\n\n"
+            "Ты нашел **Synora**. Это не просто бот. Это система твоей личной дисциплины.\n"
+            "Входя сюда, ты заключаешь договор с самим собой.\n\n"
+            "**ТЫ ОБЕЩАЕШЬ:**\n"
+            "• Не сворачивать с выбранного пути.\n"
+            "• Делать хотя бы минимум, даже в самые трудные дни.\n"
+            "• Быть честным перед собой.\n\n"
+            "Готов ли ты взять власть над своей жизнью?"
+            "**while alive: create() - Пока жив твори.**\n\n"
+        )
+
+        keyboard = [[InlineKeyboardButton("Я ПРИНИМАЮ ВЫЗОВ", callback_data="accept_vow")]]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+
+        await update.message.reply_text(manifest_text, reply_markup=reply_markup, parse_mode="Markdown")
+        return
+
     text = (
-        "Здравствуйте! Я ваш ассистент. 🚀\n\n"
-        "Команды:\n"
+        "Рад видеть тебя в строю!🚀\n\n"
+        "Твой пульт управления:\n"
         "🔵 /start - Меню.\n"
         "🔵 /today - Показать цели на сегодня.\n"
         "🔵 /add - Добавить цель на завтра.\n"
         "🔵 /list - Полный список целей.\n"
         "🔵 /delete - Удалить цель.\n"
         "🔵 /remind - напоминание целей.\n"
-        "🔵 /multi - Добавление нескольких целей подряд.\n"
+        "🔵 /multi - Массовое добавление.\n"
         "🔵 /edit - Отредактировать цель.\n"
-        "🔵 /done - Выбрать выполненные цели."
-        "🔵 /stats - Список выполненных целей"
+        "🔵 /done - Выбрать выполненные цели.\n"
+        "🔵 /stats - Список выполненных целей."
     )
     await update.message.reply_text(text)
 
@@ -245,6 +266,19 @@ async def history(update: Update, context: ContextTypes.DEFAULT_TYPE):
     result = get_history(user_id)
     await update.message.reply_text(result)
 
+async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    user_id = query.from_user.id
+
+    if query.data == "accept_vow":
+        add_vow(user_id)
+        await query.answer("Обещание принято.")
+
+        await query.edit_message_text(
+            text="**Обещание зафиксировано.**\n\nТеперь тебе доступны все инструменты системы. Начни с команды /add или посмотри /start."
+            parse_mode="Markdown"
+        )
+
 def main():
     create_table()
 
@@ -265,6 +299,8 @@ def main():
     app.add_handler(CommandHandler("status", stats))
     app.add_handler(CommandHandler("history", history))
 
+    app.add_handler(CallbackQueryHandler(button_handler))
+    
     app.run_polling()
 
 if __name__ == "__main__":

@@ -10,6 +10,12 @@ def create_table():
     conn = connect()
     cursor = conn.cursor()
 
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS vows (
+            user_id INTEGER PRIMARY KEY
+            )
+        ''')
+
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS goals_v4 (
         id SERIAL PRIMARY KEY,
