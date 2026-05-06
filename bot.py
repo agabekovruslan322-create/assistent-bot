@@ -275,7 +275,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.answer("Обещание принято.")
 
         await query.edit_message_text(
-            text="**Обещание зафиксировано.**\n\nТеперь тебе доступны все инструменты системы. Начни с команды /add или посмотри /start."
+            text="**Обещание зафиксировано.**\n\nТеперь тебе доступны все инструменты системы. Начни с команды /add или посмотри /start.",
             parse_mode="Markdown"
         )
 
@@ -300,7 +300,7 @@ def main():
     app.add_handler(CommandHandler("history", history))
 
     app.add_handler(CallbackQueryHandler(button_handler))
-    
+
     app.run_polling()
 
 if __name__ == "__main__":
