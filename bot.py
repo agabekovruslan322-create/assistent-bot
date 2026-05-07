@@ -40,8 +40,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "• Не сворачивать с выбранного пути.\n"
             "• Делать хотя бы минимум, даже в самые трудные дни.\n"
             "• Быть честным перед собой.\n\n"
-            "Готов ли ты взять власть над своей жизнью?"
-            "**while alive: create() - Пока жив твори.**\n\n"
+            "Готов ли ты взять власть над своей жизнью?\n\n"
+            "**while alive: create()** - Пока жив твори."
         )
 
         keyboard = [[InlineKeyboardButton("Я ПРИНИМАЮ ВЫЗОВ", callback_data="accept_vow")]]
@@ -50,7 +50,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(manifest_text, reply_markup=reply_markup, parse_mode="Markdown")
         return
 
-    text = (
+    menu_text = (
         "Рад видеть тебя в строю!🚀\n\n"
         "Твой пульт управления:\n"
         "🔵 /start - Меню.\n"
@@ -64,7 +64,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "🔵 /done - Выбрать выполненные цели.\n"
         "🔵 /stats - Список выполненных целей."
     )
-    await update.message.reply_text(text)
+    await update.message.reply_text(menu_text)
 
 async def today(update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
