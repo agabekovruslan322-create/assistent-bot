@@ -151,7 +151,7 @@ def check_vow(user_id):
     conn = connect()
     cursor = conn.cursor()
     cursor.execute("SELECT 1 FROM vows WHERE user_id = %s", (user_id,))
-    result - cursor.fetchone()
+    result = cursor.fetchone()
     conn.close()
     return result is not None
 
