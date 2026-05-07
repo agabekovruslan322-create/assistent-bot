@@ -165,4 +165,3 @@ def add_vow(user_id):
         print(f"Ошибка при записи клятвы: {e}")
     finally:
         conn.close()
-    
