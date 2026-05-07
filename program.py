@@ -150,18 +150,29 @@ def add_multi_goals(user_id, text):
 def check_vow(user_id):
     conn = connect()
     cursor = conn.cursor()
-    cursor.execute("SELECT 1 FROM vows WHERE user_id = %s", (user_id,))
-    result = cursor.fetchone()
-    conn.close()
-    return result is not None
+    try:
+        cursor.execute("SELECT 1 FROM vows WHERE user_id = %s", (user_id,))
+        result = cursor.fetchone()
+        return result is not None
+    except Exception as e:
+        print(f"Ошибка при проверке клятвы: {e}")
+        return False
+    finally:
+        cursor.close()
+        conn.close()
 
 def add_vow(user_id):
     conn = connect()
     cursor = conn.cursor()
     try:
-        cursor.execute("INSERT INTO vows (user_id) VALUES (%s)", (user_id,))
+        cursor.execute(
+            "INSERT INTO vows (user_id) VALUES (%s) ON CONFLICT (user_id) DO NOTHING", 
+            (user_id,)
+        )
         conn.commit()
+        print(f"DEBUG: Клятва для {user_id} успешно записана!")
     except Exception as e:
-        print(f"Ошибка при записи клятвы: {e}")
+        print(f"ОШИБКА ПРИ ЗАПИСИ КЛЯТВЫ: {e}")
     finally:
+        cursor.close()
         conn.close()
