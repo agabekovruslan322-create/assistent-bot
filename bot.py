@@ -279,6 +279,13 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
 def main():
+    from database import connect
+    conn = connect()
+    cursor = conn.cursor()
+    cursor.execute("ALTER TABLE vows ALTER COLUMN user_id TYPE BIGINT;")
+    conn.commit()
+    conn.close()
+    
     create_table()
 
     app = ApplicationBuilder().token(TOKEN).build()
