@@ -111,6 +111,7 @@ async def add(update, context):
 
             context.job_queue.run_once(
                 send_reminder_with_text,
+                when=diff,
                 chat_id=update.message.chat_id,
                 name=f"{user_id}_{found_time}",
                 data=goal_text
@@ -123,6 +124,20 @@ async def add(update, context):
 
     if found_time:
         result += f"\n⏰ Маяк установлен на {found_time}"
+    await update.message.reply_text(result)
+
+async def list_goals(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+
+    result = show_goals(user_id)
+    
+    await update.message.reply_text(result, parse_mode="Markdown")
+
+async def delete(update, context):
+    user_id = update.effective_user.id
+    user_input = " ".join(context.args)
+
+    result = delete_goals(user_input, user_id)
     await update.message.reply_text(result)
 
 async def send_reminder_with_text(context: ContextTypes.DEFAULT_TYPE):
