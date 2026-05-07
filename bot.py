@@ -93,51 +93,36 @@ async def add(update, context):
         found_time = match.group(1)
         goal_text = raw_text.replace(found_time, "").strip()
     
-    try:
-        tz = pytz.timezone('Europe/Moscow')
-        now = datetime.now(tz)
+    if found_time:
+        try:
+            tz = pytz.timezone('Europe/Moscow')
+            now = datetime.now(tz)
 
-        t = datetime.strptime(found_time, "%H:%M")
-        target_time = tz.localize(datetime(
-            now.year, now.month, now.day, t.hour, t.minute
-        ))
+            t = datetime.strptime(found_time, "%H:%M")
+            target_time = tz.localize(datetime(
+                now.year, now.month, now.day, t.hour, t.minute
+            ))
 
-        if target_time < now:
-            target_time += timedelta(days=1)
-        diff = (target_time - now).total_seconds()
+            if target_time < now:
+                target_time += timedelta(days=1)
+            diff = (target_time - now).total_seconds()
 
-        logging.info(f">>> Маяк сработает через {diff} секунд")
+            logging.info(f">>> Маяк сработает через {diff} секунд")
 
-        context.job_queue.run_once(
-            send_reminder_with_text,
-            when=diff,
-            chat_id=update.message.chat_id,
-            name=f"{user_id}_{found_time}",
-            data=goal_text
-        )
-
-    except Exception as e:
-        logging.error(f"Ошибка при установке маяка {e}")
+            context.job_queue.run_once(
+                send_reminder_with_text,
+                chat_id=update.message.chat_id,
+                name=f"{user_id}_{found_time}",
+                data=goal_text
+            )
+        except Exception as e:
+            logging.error(f"Ошибка при установке маяка {e}")
 
     from program import add_todays_goal
     result = add_todays_goal(user_id, goal_text)
 
     if found_time:
         result += f"\n⏰ Маяк установлен на {found_time}"
-    await update.message.reply_text(result)
-
-async def list_goals(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_id = update.message.from_user.id
-
-    result = show_goals(user_id)
-    await update.message.reply_text(result)
-
-async def delete(update, context):
-    user_id = update.effective_user.id
-
-    user_input = " ".join(context.args)
-    
-    result = delete_goals(user_input, user_id)
     await update.message.reply_text(result)
 
 async def send_reminder_with_text(context: ContextTypes.DEFAULT_TYPE):
@@ -190,7 +175,7 @@ async def remind(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     context.job_queue.run_once(
-        send_reminder,
+        send_reminder_with_text,
         when=timedelta(minutes=minutes),
         chat_id=update.message.chat_id,
         name=str(update.message.from_user.id)
