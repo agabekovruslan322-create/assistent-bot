@@ -12,7 +12,7 @@ def create_table():
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS vows (
-            user_id INTEGER PRIMARY KEY
+            user_id BIGINT PRIMARY KEY
             )
         ''')
 
