@@ -148,22 +148,21 @@ def add_multi_goals(user_id, text):
     return f"⚡️ Добавлено целей: {len(goals)}"
 
 def check_vow(user_id):
-    import sqlite3
-    conn = sqlite3.connect('goals.db')
+    conn = connect()
     cursor = conn.cursor()
-    cursor.execute("SELECT 1 FROM vows WHERE user_id = ?", (user_id,))
+    cursor.execute("SELECT 1 FROM vows WHERE user_id = %s", (user_id,))
     result - cursor.fetchone()
     conn.close()
     return result is not None
 
 def add_vow(user_id):
-    import sqlite3
-    conn = sqlite3.connect('goals.db')
+    conn = connect()
     cursor = conn.cursor()
     try:
-        cursor.execute("INSERT INTO vows (user_id) VALUES (?)", (user_id,))
+        cursor.execute("INSERT INTO vows (user_id) VALUES (%s)", (user_id,))
         conn.commit()
-    except:
-        pass
-    conn.close()
+    except Exception as e:
+        print(f"Ошибка при записи клятвы: {e}")
+    finally:
+        conn.close()
     

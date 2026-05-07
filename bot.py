@@ -67,8 +67,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(text)
 
 async def today(update, context: ContextTypes.DEFAULT_TYPE):
-    update.effective_user.id
-    
+    update = effective_user.id
     result = get_todays_goal(user_id)
     print(f"DEBUG: Result for user {user_id} is: {result}")
 
