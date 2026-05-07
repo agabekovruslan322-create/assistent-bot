@@ -268,8 +268,6 @@ def main():
 
     app = ApplicationBuilder().token(TOKEN).build()
 
-    app.add_error_handler(error_handler)
-
     app.add_handler(CommandHandler("list", list_goals))
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("today", today))
@@ -285,7 +283,7 @@ def main():
 
     app.add_handler(CallbackQueryHandler(button_handler))
 
-    app.run_polling()
+    app.add_error_handler(error_handler)
 
-if __name__ == "__main__":
-    main()
+    print("Synora запущен. Полет нормальный. 🚀")
+    app.run_polling()
