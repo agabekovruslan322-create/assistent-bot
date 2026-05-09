@@ -20,7 +20,7 @@ from database import connect
 
 CHOOSING, TYPING_REPLY = range(2)
 
-from program import get_todays_goal, add_todays_goal, show_goals, delete_goals, add_multi_goals, update_goal_text, complete_goal, get_user_stats, get_history, check_vow, add_vow
+from program import get_todays_goal, add_todays_goal, show_goals, delete_goals, add_multi_goals, update_goal_text, complete_goal, get_user_stats, get_history, check_vow, add_vow, get_users_for_judgement, get_todays_goal
 
 TOKEN = os.getenv("BOT")
 
@@ -291,21 +291,47 @@ async def history(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     user_id = query.from_user.id
+    date = query.data
 
-    if query.data == "accept_vow":
+    if data == "accept_vow":
         add_vow(user_id)
         await query.answer("Обещание принято.")
-
         await query.edit_message_text(
             text="**Обещание зафиксировано.**\n\nТеперь тебе доступны все инструменты системы. Начни с команды /add или посмотри /start.",
             parse_mode="Markdown"
         )
+    
+    elif data.startswitch("done_")
+    goal_id = int(data.split("_")[1])
+    task_text = complete_goal(goal_id, user_id)
+
+    if task_text:
+        await query.answer(f"Выполнено: {task_text}")
+        await query.edit_message_text(f"🔥 Задача «{task_text}» выполнена. Я рад за тебя, ты продвинулся ближе к своей мечте.")
+    else:
+        await query.answer("Ошибка: Задача не найдена.")
+
+async def  check_for_judgement(context: ContextTypes.DEFAULT_TYPE):
+    tz = pytz.timezone('Europe/Moscow')
+    current_time = datetime.now(tz).strftime("%H:%M")
+    user_ids = get_users_for_judgement(current_time)
+
+    for uid in user_ids:
+        try:
+            await context.bot.send_message(
+                chat_id=uid,
+                text="🚨 Время вышло. Судный Вечер настал. Проверь свои цели через /today."
+            )
+        except Exception as e:
+            logging.error(f"Ошибка при уведомлении {uid}: {e}")
 
 def main():
     create_table()
 
     app = ApplicationBuilder().token(TOKEN).build()
-
+    
+    app.job_queue.run_repeating(check_for_judgement, interval=60, first=10)
+    
     app.add_handler(CommandHandler("list", list_goals))
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("today", today))
