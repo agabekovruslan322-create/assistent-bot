@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
 
 print(requests.get("https://api.telegram.org").status_code)
 
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, CallbackQueryHandler
 from database import create_table
 from telegram.ext import ConversationHandler, MessageHandler, filters
@@ -58,9 +58,20 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text(manifest_text, reply_markup=reply_markup, parse_mode="Markdown")
         return
+    
+    main_menu_keyboard = [
+        ['⚔️ Мои цели', '📊 Статистика'],
+        ['📜 История', '📝 Новая задача'],
+        ['⚙️ Настройки'] 
+    ]
+    reply_markup = ReplyKeyboardMarkup(main_menu_keyboard, resize_keyboard=True)
+    
+    await update.message.reply_text(
+        "Рад видеть тебя в строю!🚀\nВыбирай действие на панели управления:",
+        reply_markup=reply_markup
+    )
 
     menu_text = (
-        "Рад видеть тебя в строю!🚀\n\n"
         "Твой пульт управления:\n"
         "🔵 /start - Меню.\n"
         "🔵 /today - Показать цели на сегодня.\n"
@@ -307,7 +318,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             parse_mode="Markdown"
         )
     
-    elif date.startswith("done_"):
+    elif callback_data.startswith("done_"):
         goal_id = int(callback_data.split("_")[1])
         task_text = complete_goal(goal_id, user_id)
 
