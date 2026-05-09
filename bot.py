@@ -299,7 +299,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = query.from_user.id
     date = query.data
 
-    if data == "accept_vow":
+    if date == "accept_vow":
         add_vow(user_id)
         await query.answer("Обещание принято.")
         await query.edit_message_text(
