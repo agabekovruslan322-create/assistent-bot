@@ -20,6 +20,7 @@ from telegram.ext import ConversationHandler, MessageHandler, filters
 from database import connect
 
 CHOOSING, TYPING_REPLY = range(2)
+WAITING_FOR_GOAL = 1
 
 from program import get_todays_goal, add_todays_goal, show_goals, delete_goals, add_multi_goals, update_goal_text, complete_goal, get_user_stats, get_history, check_vow, add_vow, get_users_for_judgement
 
@@ -342,6 +343,36 @@ async def  check_for_judgement(context: ContextTypes.DEFAULT_TYPE):
         except Exception as e:
             logging.error(f"Ошибка при уведомлении {uid}: {e}")
 
+async def new_task_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "Слушаю тебя, Архитектор. Напиши цель (и время, если нужно, например: 'Медитация 08:00'
+    )
+    return WAITING_FOR_GOAL
+
+async def new_task_save(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+    goal_text = update.message.text
+    
+    from program import add_todays_goal
+    result = add_todays_goal(user_id, goal_text)
+
+    await update.message.reply_text(f"✅ Принято. {result}")
+    return ConversationHandler.END
+
+async def settings_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.if
+    from database import get_or_create_settings
+
+    settings = get_or_create_settings(user_id)
+    current_time = settings[0] if settings else "22:00"
+
+    text = (
+        "⚙️ **НАСТРОЙКИ**\n\n"
+        f"Текущее время Судного Вечера: `{current_time}`\n\n"
+        "Чтобы изменить время, напиши команду: \n`/set_time ЧЧ:ММ`"
+    )
+    await update.message.reply_text(text, parse_mode="Markdown")
+
 def main():
     create_table()
 
@@ -364,10 +395,20 @@ def main():
 
     app.add_handler(CallbackQueryHandler(button_handler))
     
+    new_task_hundler = ConversationHandler(
+        entry_points=[MessageHandler(filters.Text("📝 Новая задача"), new_task_start)],
+        states={
+            WAITING_FOR_GOAL: [MessageHandler(filters.TEXT & ~filters.COMMAND, new_task_save)],
+        },
+        fallbacks=[],
+    )
+    app.add_handler(new_task_hundler)
+
     app.add_handler(MessageHandler(filters.Text("⚔️ Мои цели"), today))
     app.add_handler(MessageHandler(filters.Text("📊 Статистика"), stats))
     app.add_handler(MessageHandler(filters.Text("📜 История"), history))
-
+    app.add_handler(CommandHandler("set_time", set_time))
+    
     app.add_error_handler(error_handler)
     print("Synora запущен. Полет нормальный. 🚀")
     app.run_polling()
