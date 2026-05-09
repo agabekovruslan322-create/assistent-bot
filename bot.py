@@ -407,7 +407,7 @@ def main():
     app.add_handler(MessageHandler(filters.Text("⚔️ Мои цели"), today))
     app.add_handler(MessageHandler(filters.Text("📊 Статистика"), stats))
     app.add_handler(MessageHandler(filters.Text("📜 История"), history))
-    app.add_handler(CommandHandler("set_time", set_time))
+    app.add_handler(CommandHandler("set_time", datetime))
 
     app.add_error_handler(error_handler)
     print("Synora запущен. Полет нормальный. 🚀")
