@@ -25,6 +25,30 @@ def create_table():
         is_completed BOOLEAN DEFAULT FALSE
     )
     """)
+    
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS user_settings (
+        user_id BIGINT PRIMARY KEY,
+        day_end_time TEXT DEFAULT '22:00',
+        timezone TEXT DEFAULT 'Europe/Moscow'
+        )
+    """)
+
+def get_or_create_settings(user_id):
+    conn = connect()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO user_settings (user_id)
+        VALUES (%s)
+        ON CONFLICT (user_id) DO NOTHING;
+    """, (user_id))
+
+    cursor.execute("SELECT day_end_time, FROM user_settings WHERE user_id = %s", (user_id,))
+    settings = cursor.fetchone()
+    conn.commit()
+    conn.close()
+    return settings
 
     conn.commit()
     conn.close()

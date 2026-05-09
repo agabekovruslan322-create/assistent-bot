@@ -17,6 +17,8 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, Callb
 from database import create_table
 from telegram.ext import ConversationHandler, MessageHandler, filters
 
+CHOOSING, TYPING_REPLY = range(2)
+
 from program import get_todays_goal, add_todays_goal, show_goals, delete_goals, add_multi_goals, update_goal_text, complete_goal, get_user_stats, get_history, check_vow, add_vow
 
 TOKEN = os.getenv("BOT")
@@ -68,10 +70,30 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def today(update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
-    result = get_todays_goal(user_id)
-    print(f"DEBUG: Result for user {user_id} is: {result}")
+    conn = connect()
+    cursor = conn.cursor()
+    
+    tz = pytz.timezone('Europe/Moscow')
+    today_str = datetime..now(tz).strftime("%Y-%m-%d")
 
-    await update.message.reply_text(result)
+    cursor.execute(
+        "SELECT id, text FROM goals_v4 WHERE user_id=%s AND date LIKE %s AND is_completed=FALSE",
+        (user_id, f"{today_str}%")
+    )
+    rows = cursor.fetchall()
+    conn.close()
+
+    if not rows:
+        await update.message.reply_text("На сегодня целей нет. Ты свободен или просто забыл про мечты?")
+        return
+
+    keyboard = []
+    for goal_id, text in rows:
+        keyboard.append([InlineKeyboardButton(f"✅ {text}", callback_data=f"done_{goal_id}")])
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await update.message.reply_text("Твои задачи на сегодня. Нажми на выполненную:", reply_markup=reply_markup)
+
 
 async def add(update, context):
     user_id = update.message.from_user.id 
