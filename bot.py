@@ -21,7 +21,7 @@ from database import connect
 
 CHOOSING, TYPING_REPLY = range(2)
 
-from program import get_todays_goal, add_todays_goal, show_goals, delete_goals, add_multi_goals, update_goal_text, complete_goal, get_user_stats, get_history, check_vow, add_vow, get_users_for_judgement, get_todays_goal
+from program import get_todays_goal, add_todays_goal, show_goals, delete_goals, add_multi_goals, update_goal_text, complete_goal, get_user_stats, get_history, check_vow, add_vow, get_users_for_judgement
 
 TOKEN = os.getenv("BOT")
 
@@ -297,9 +297,9 @@ async def history(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     user_id = query.from_user.id
-    date = query.data
+    callback_data = query.data
 
-    if date == "accept_vow":
+    if callback_data == "accept_vow":
         add_vow(user_id)
         await query.answer("Обещание принято.")
         await query.edit_message_text(
@@ -308,14 +308,14 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
     
     elif date.startswith("done_"):
-        goal_id = int(data.split("_")[1])
+        goal_id = int(callback_data.split("_")[1])
         task_text = complete_goal(goal_id, user_id)
 
-    if task_text:
-        await query.answer(f"Выполнено: {task_text}")
-        await query.edit_message_text(f"🔥 Задача «{task_text}» выполнена. Я рад за тебя, ты продвинулся ближе к своей мечте.")
-    else:
-        await query.answer("Ошибка: Задача не найдена.")
+        if task_text:
+            await query.answer(f"Выполнено: {task_text}")
+            await query.edit_message_text(f"🔥 Задача «{task_text}» выполнена. Я рад за тебя, ты продвинулся ближе к своей мечте.")
+        else:
+            await query.answer("Ошибка: Задача не найдена.")
 
 async def  check_for_judgement(context: ContextTypes.DEFAULT_TYPE):
     tz = pytz.timezone('Europe/Moscow')
