@@ -45,7 +45,7 @@ def show_goals(user_id, only_active=True):
     if only_active:
         query = "SELECT id, text, date FROM goals_v4 WHERE user_id=%s AND is_completed=FALSE ORDER BY id ASC"
     else:
-        query = "SELECT id, text, date FROM goals_v4 WHERE user_id=%s AND is_completed=TRUE ORDER BY id ASC"
+        query = "SELECT id, text, date FROM goals_v4 WHERE user_id=%s AND is_completed=TRUE ORDER BY date DESC"
 
     cursor.execute(query, (user_id,))
     rows = cursor.fetchall()

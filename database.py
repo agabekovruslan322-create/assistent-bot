@@ -42,17 +42,27 @@ def create_table():
 def get_or_create_settings(user_id):
     conn = connect()
     cursor = conn.cursor()
-
-    cursor.execute("""
-        INSERT INTO user_settings (user_id)
-        VALUES (%s)
-        ON CONFLICT (user_id) DO NOTHING;
-    """, (user_id,))
-
-    cursor.execute("SELECT day_end_time, timezone FROM user_settings WHERE user_id = %s", (user_id,))
-    settings = cursor.fetchone()
-
-    conn.commit()
-    cursor.close()
+    cursor.execute("SELECT day_end_time FROM user_settings WHERE user_id = %s", (user_id,))
+    row = cursor.fetchone()
+    
+    if not row:
+        cursor.execute("INSERT INTO user_settings (user_id, day_end_time) VALUES (%s, %s)", (user_id, "22:00"))
+        conn.commit()
+        row = ("22:00",)
+    
     conn.close()
-    return settings
+    return row
+
+def update_user_time(user_id, new_time):
+    conn = connect()
+    cursor = conn.cursor()
+    cursor.execute(
+        "INSERT INTO user_settings (user_id, day_end_time) VALUES (%s, %s)"
+        "ON CONFLICT (user_id) DO UPDATE SET day_end_time = EXCLUDED.day_end_time",
+        (user_id, new_time)
+    )
+    conn.commit()
+    conn.close()
+
+
+

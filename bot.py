@@ -17,7 +17,7 @@ from telegram.ext import (
     filters
 )
 
-# Импорты из твоих файлов
+# Импорты из файлов
 from database import create_table, connect, get_or_create_settings, update_user_time
 from program import (
     get_todays_goal, add_todays_goal, show_goals, delete_goals, 
@@ -37,7 +37,7 @@ if not TOKEN:
     print("Ошибка: Переменная BOT_TOKEN не найдена")
     exit(1)
 
-# --- ОБРАБОТКА ОШИБОК ---
+#  ОБРАБОТКА ОШИБОК
 async def error_handler(update, context):
     logging.error(f"Произошла ошибка: {update}:")
     tb_list = traceback.format_exception(None, context.error, context.error.__traceback__)
@@ -152,6 +152,35 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         else:
             await query.answer("Ошибка: Задача не найдена.")
 
+async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+    result = get_user_stats(user_id)
+    await update.message.reply_text(result)
+
+async def history(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+    result = get_history(user_id)
+    await update.message.reply_text(result)
+
+async def delete(update, context):
+    user_id = update.effective_user.id
+    user_input = " ".join(context.args)
+    result = delete_goals(user_input, user_id)
+    await update.message.reply_text(result)
+
+# Логика напоминаний (Маяки)
+async def send_reminder_with_text(context: ContextTypes.DEFAULT_TYPE):
+    job = context.job
+    await context.bot.send_message(
+        chat_id=job.chat_id,
+        text=f"⏰ ВРЕМЯ ВЫШЛО!\nТвоя цель: {job.data}\n\nКак успехи? Сделал?"
+    )
+
+async def remind(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not context.args:
+        await update.message.reply_text("Пример: /remind 10m или /remind 21:00")
+        return
+
 # --- СИСТЕМНЫЕ ФУНКЦИИ ---
 async def check_for_judgement(context: ContextTypes.DEFAULT_TYPE):
     tz = pytz.timezone('Europe/Moscow')
@@ -171,7 +200,7 @@ def main():
     
     app.job_queue.run_repeating(check_for_judgement, interval=60, first=10)
     
-    # Режим диалога для новой задачи
+    # Режим диалога
     new_task_handler = ConversationHandler(
         entry_points=[MessageHandler(filters.Text("📝 Новая задача"), new_task_start)],
         states={
@@ -188,13 +217,13 @@ def main():
     
     app.add_handler(new_task_handler)
     app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("set_time", set_time_handler)) # ИСПРАВЛЕНО: была привязка к datetime
+    app.add_handler(CommandHandler("set_time", set_time_handler))
     
     # Кнопки меню
     app.add_handler(MessageHandler(filters.Text("⚔️ Мои цели"), today))
     app.add_handler(MessageHandler(filters.Text("📊 Статистика"), stats))
     app.add_handler(MessageHandler(filters.Text("📜 История"), history))
-    app.add_handler(MessageHandler(filters.Text("⚙️ Настройки"), settings_menu)) # ДОБАВЛЕНО
+    app.add_handler(MessageHandler(filters.Text("⚙️ Настройки"), settings_menu)) 
 
     # Команды
     app.add_handler(CommandHandler("today", today))
