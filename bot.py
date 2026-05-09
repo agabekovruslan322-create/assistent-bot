@@ -16,6 +16,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, CallbackQueryHandler
 from database import create_table
 from telegram.ext import ConversationHandler, MessageHandler, filters
+from database import connect
 
 CHOOSING, TYPING_REPLY = range(2)
 
