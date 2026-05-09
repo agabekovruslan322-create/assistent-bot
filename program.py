@@ -178,6 +178,7 @@ def add_vow(user_id):
         conn.close()
 
 def get_users_for_judgement(current_time):
+    conn = connect()
     cursor = conn.cursor()
 
     cursor.execute("SELECT user_id FROM user_settings WHERE day_end_time = %s", (current_time,))
