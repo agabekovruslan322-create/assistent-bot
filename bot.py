@@ -307,7 +307,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             parse_mode="Markdown"
         )
     
-    elif data.startswitch("done_"):
+    elif date.startswitch("done_"):
         goal_id = int(data.split("_")[1])
         task_text = complete_goal(goal_id, user_id)
 
