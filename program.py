@@ -181,6 +181,6 @@ def get_users_for_judgement(current_time):
     cursor = conn.cursor()
 
     cursor.execute("SELECT user_id FROM user_settings WHERE day_end_time = %s", (current_time,))
-    users = cursor.fetchall()
+    result = cursor.fetchall()
     conn.close()
-    return [u[0] for u in users]
+    return [u[0] for u in result]
