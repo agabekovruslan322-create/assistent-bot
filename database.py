@@ -21,7 +21,8 @@ def create_table():
         id SERIAL PRIMARY KEY,
         user_id BIGINT,
         text TEXT,
-        date text 
+        date TEXT,
+        is_completed BOOLEAN DEFAULT FALSE
     )
     """)
 
