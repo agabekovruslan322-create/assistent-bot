@@ -360,7 +360,7 @@ async def new_task_save(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return ConversationHandler.END
 
 async def settings_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_id = update.effective_user.if
+    user_id = update.effective_user.id
     from database import get_or_create_settings
 
     settings = get_or_create_settings(user_id)
