@@ -345,7 +345,7 @@ async def  check_for_judgement(context: ContextTypes.DEFAULT_TYPE):
 
 async def new_task_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "Слушаю тебя, Архитектор. Напиши цель (и время, если нужно, например: 'Медитация 08:00'
+        "Слушаю тебя, Архитектор. Напиши цель (и время, если нужно, например: 'Медитация 08:00')"
     )
     return WAITING_FOR_GOAL
 
@@ -408,7 +408,7 @@ def main():
     app.add_handler(MessageHandler(filters.Text("📊 Статистика"), stats))
     app.add_handler(MessageHandler(filters.Text("📜 История"), history))
     app.add_handler(CommandHandler("set_time", set_time))
-    
+
     app.add_error_handler(error_handler)
     print("Synora запущен. Полет нормальный. 🚀")
     app.run_polling()
