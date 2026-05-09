@@ -363,6 +363,10 @@ def main():
     app.add_handler(CommandHandler("history", history))
 
     app.add_handler(CallbackQueryHandler(button_handler))
+    
+    app.add_handler(MessageHandler(filters.Text("⚔️ Мои цели"), today))
+    app.add_handler(MessageHandler(filters.Text("📊 Статистика"), stats))
+    app.add_handler(MessageHandler(filters.Text("📜 История"), history))
 
     app.add_error_handler(error_handler)
     print("Synora запущен. Полет нормальный. 🚀")
