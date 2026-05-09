@@ -74,7 +74,7 @@ async def today(update, context: ContextTypes.DEFAULT_TYPE):
     cursor = conn.cursor()
     
     tz = pytz.timezone('Europe/Moscow')
-    today_str = datetime..now(tz).strftime("%Y-%m-%d")
+    today_str = datetime.now(tz).strftime("%Y-%m-%d")
 
     cursor.execute(
         "SELECT id, text FROM goals_v4 WHERE user_id=%s AND date LIKE %s AND is_completed=FALSE",
