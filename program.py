@@ -178,11 +178,9 @@ def add_vow(user_id):
         conn.close()
 
 def get_users_for_judgement(current_time):
-    """Ищет пользователей, у которых 'Судный Вечер' совпадает с текущим временем"""
-    conn = connect()
     cursor = conn.cursor()
 
     cursor.execute("SELECT user_id FROM user_settings WHERE day_end_time = %s", (current_time,))
-    cursor.fetchall()
+    users = cursor.fetchall()
     conn.close()
     return [u[0] for u in users]

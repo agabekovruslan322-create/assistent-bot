@@ -29,7 +29,12 @@ if not TOKEN:
     exit(1)
 
 async def error_handler(update, context):
-    logging.error(f"Произошла ошибка: {context.error}")
+    logging.error(f"Произошла ошибка: {update}:")
+
+    tb_list = traceback.format_exception(None, context.error, context.error.__traceback__)
+    tb_string = "".join(tb_list)
+
+    logging.error(tb_string)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
