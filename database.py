@@ -69,5 +69,11 @@ def update_user_time(user_id, new_time):
     conn.commit()
     conn.close()
 
-
+def is_user_vowed(user_id):
+    conn = connect()
+    cursor = conn.cursor()
+    cursor.execute("SELECT 1 FROM vows WHERE user_id = %s", (user_id,))
+    exists = cursor.fetchone() is not None
+    conn.close()
+    return exists
 

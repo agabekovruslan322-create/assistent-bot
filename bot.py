@@ -133,6 +133,17 @@ async def set_time_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(f"✅ Время отчета изменено на {new_time}")
 
 # --- ОБРАБОТКА КНОПОК ---
+async def handle_message(update, context):
+    user_id = update.message.effective_user.id
+    text = update.message.text
+
+    if not is_user_vowed(user_id) and text != "Принять вызов ⚔️":
+        await update.message.reply_text(
+            "Твоего имени нет в списке принявших вызов. "
+            "Нажми /start, чтобы подтвердить свои намерения."
+        )
+        return
+
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     user_id = query.from_user.id
@@ -199,12 +210,13 @@ async def check_for_judgement(context: ContextTypes.DEFAULT_TYPE):
             await context.bot.send_message(chat_id=uid, text="🚨 Судный Вечер! Проверь цели через /today.")
         except Exception as e:
             logging.error(f"Ошибка уведомления {uid}: {e}")
+
 async def cancel_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Возвращаемся в меню.", reply_markup=ReplyKeyboardMarkup([
         ['⚔️ Мои цели', '📊 Статистика'], ['📜 История', '📝 Новая задача'], ['⚙️ Настройки']
     ], resize_keyboard=True))
     return ConversationHandler.END
-    
+
 # --- ОСНОВНОЙ ЗАПУСК ---
 def main():
     create_table()
