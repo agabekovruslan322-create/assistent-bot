@@ -1,6 +1,5 @@
 import re
 import os
-import requests
 import pytz
 import logging
 import traceback
@@ -76,6 +75,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # --- ЛОГИКА ЦЕЛЕЙ ---
 async def today(update, context: ContextTypes.DEFAULT_TYPE):
+
+    if not await require_vow(update):
+        return
+
     user_id = update.effective_user.id
     conn = connect()
     cursor = conn.cursor()
@@ -97,6 +100,10 @@ async def today(update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Твои задачи на сегодня:", reply_markup=InlineKeyboardMarkup(keyboard))
 
 async def new_task_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+        if not await require_vow(update):
+            return
+
     await update.message.reply_text("Слушаю тебя. Напиши цель (можно со временем, например: 'Йога 07:00')")
     return WAITING_FOR_GOAL
 
@@ -109,6 +116,11 @@ async def new_task_save(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # --- НАСТРОЙКИ ---
 async def settings_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+        if not await require_vow(update):
+            return
+
+
     user_id = update.effective_user.id
     settings = get_or_create_settings(user_id)
     current_time = settings[0] if settings else "22:00"
@@ -135,16 +147,6 @@ async def set_time_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(f"✅ Время отчета изменено на {new_time}")
 
 # --- ОБРАБОТКА КНОПОК ---
-async def handle_message(update, context):
-    user_id = update.message.effective_user.id
-    text = update.message.text
-
-    if not is_user_vowed(user_id) and text != "Принять вызов ⚔️":
-        await update.message.reply_text(
-            "Твоего имени нет в списке принявших вызов. "
-            "Нажми /start, чтобы подтвердить свои намерения."
-        )
-        return
 
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
@@ -174,16 +176,27 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await query.answer("Ошибка: Задача не найдена.")
 
 async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not await require_vow(update):
+        return 
+
     user_id = update.effective_user.id
     result = get_user_stats(user_id)
     await update.message.reply_text(result)
 
 async def history(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    if not await require_vow(update):
+        return
+
     user_id = update.effective_user.id
     result = get_history(user_id)
     await update.message.reply_text(result)
 
 async def delete(update, context):
+
+    if not await require_vow(update):
+        return
+
     user_id = update.effective_user.id
     user_input = " ".join(context.args)
     result = delete_goals(user_input, user_id)
@@ -230,6 +243,17 @@ async def cancel_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     return ConversationHandler.END
 
+async def require_vow(update):
+    user_id = update.effective_user.id
+
+    if not check_vow(user_id):
+        await update.message.reply_text(
+            "⚔️ Сначала прими вызов через /start"
+        )
+        return False
+
+    return True
+
 # --- ОСНОВНОЙ ЗАПУСК ---
 def main():
     create_table()
@@ -249,8 +273,6 @@ def main():
         fallbacks=[CommandHandler("cancel", cancel_handler)],
         allow_reentry=True
     )
-    
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message), group=-1 )
 
     app.add_handler(new_task_handler)
     app.add_handler(CommandHandler("start", start))
@@ -271,7 +293,7 @@ def main():
     app.add_handler(CallbackQueryHandler(button_handler))
     app.add_error_handler(error_handler)
 
-    print("Synora запущен. 🚀")
+    logging.info("Synora запущен. 🚀")
     app.run_polling()
 
 if __name__ == "__main__":
