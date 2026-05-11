@@ -101,8 +101,8 @@ async def today(update, context: ContextTypes.DEFAULT_TYPE):
 
 async def new_task_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
-        if not await require_vow(update):
-            return
+    if not await require_vow(update):
+        return
 
     await update.message.reply_text("Слушаю тебя. Напиши цель (можно со временем, например: 'Йога 07:00')")
     return WAITING_FOR_GOAL
@@ -117,8 +117,8 @@ async def new_task_save(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # --- НАСТРОЙКИ ---
 async def settings_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
-        if not await require_vow(update):
-            return
+    if not await require_vow(update):
+        return
 
 
     user_id = update.effective_user.id
