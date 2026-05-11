@@ -7,8 +7,9 @@ load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 def connect():
-    return 
-psycopg2.connect(DATABASE_URL)
+    if not DATABASE_URL:
+        raise ValueError("DATABASE_URL не найден в переменных окружения!")
+    return psycopg2.connect(DATABASE_URL)
 
 def create_table():
     conn = connect()
