@@ -142,7 +142,13 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         add_vow(user_id)
         await query.answer("Обещание принято.")
         await query.edit_message_text("**Обещание зафиксировано.**\nИспользуй меню для работы.", parse_mode="Markdown")
-    
+
+    main_menu_keyboard = [['⚔️ Мои цели', '📊 Статистика'], ['📜 История', '📝 Новая задача'], ['⚙️ Настройки']]
+    await context.bot.send_message(
+        chat_id=user_id,
+        text="Synora активна. Время действовать! 🚀",
+        reply_markup=ReplyKeyboardMarkup(main_menu_keyboard, resize_keyboard=True)
+    )
     elif callback_data.startswith("done_"):
         goal_id = int(callback_data.split("_")[1])
         task_text = complete_goal(goal_id, user_id)
@@ -192,7 +198,12 @@ async def check_for_judgement(context: ContextTypes.DEFAULT_TYPE):
             await context.bot.send_message(chat_id=uid, text="🚨 Судный Вечер! Проверь цели через /today.")
         except Exception as e:
             logging.error(f"Ошибка уведомления {uid}: {e}")
-
+async def cancel_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Возвращаемся в меню.", reply_markup=ReplyKeyboardMarkup([
+        ['⚔️ Мои цели', '📊 Статистика'], ['📜 История', '📝 Новая задача'], ['⚙️ Настройки']
+    ], resize_keyboard=True))
+    return ConversationHandler.END
+    
 # --- ОСНОВНОЙ ЗАПУСК ---
 def main():
     create_table()
@@ -202,16 +213,14 @@ def main():
     
     # Режим диалога
     new_task_handler = ConversationHandler(
-        entry_points=[MessageHandler(filters.Text("📝 Новая задача"), new_task_start)],
+        entry_points=[MessageHandler(filters.Regex("^📝 Новая задача$"), new_task_start)],
         states={
             WAITING_FOR_GOAL: [
-                MessageHandler(
-                    filters.TEXT & ~filters.COMMAND & ~filters.Text(["⚔️ Мои цели", "📊 Статистика", "📜 История", "⚙️ Настройки", "📝 Новая задача"]), 
-                    new_task_save
-                )
+                MessageHandler(filters.Regex("^(⚔️ Мои цели|📊 Статистика|📜 История|⚙️ Настройки)$"), cancel_handler),
+                MessageHandler(filters.TEXT & ~filters.COMMAND, new_task_save)
             ],
         },
-        fallbacks=[MessageHandler(filters.TEXT, start)],
+        fallbacks=[CommandHandler("cancel", cancel_handler)],
         allow_reentry=True
     )
     
