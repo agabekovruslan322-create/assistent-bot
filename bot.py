@@ -31,6 +31,7 @@ WAITING_FOR_GOAL = 1
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logging.getLogger('apscheduler').setLevel(logging.WARNING)
 logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger('apscheduler.executors.default').setLevel(logging.WARNING)
 
 TOKEN = os.getenv("BOT_TOKEN")
 
@@ -152,6 +153,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if callback_data == "accept_vow":
         add_vow(user_id)
+        get_or_create_settings(user_id)
         await query.answer("Обещание принято.")
         await query.edit_message_text("**Обещание зафиксировано.**\nИспользуй меню для работы.", parse_mode="Markdown")
 
@@ -213,9 +215,19 @@ async def check_for_judgement(context: ContextTypes.DEFAULT_TYPE):
             logging.error(f"Ошибка уведомления {uid}: {e}")
 
 async def cancel_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Возвращаемся в меню.", reply_markup=ReplyKeyboardMarkup([
-        ['⚔️ Мои цели', '📊 Статистика'], ['📜 История', '📝 Новая задача'], ['⚙️ Настройки']
-    ], resize_keyboard=True))
+    text = update.message.text
+
+    await update.message.reply_text("Возвращаемся в меню...")
+
+    if text == "⚙️ Настройки":
+        return await settings_menu(update, context)
+    elif text == "⚔️ Мои цели":
+        return await today(update, context)
+    elif text == "📊 Статистика":
+        return await stats(update, context)
+    elif text == "📜 История":
+        return await history(update, context)
+
     return ConversationHandler.END
 
 # --- ОСНОВНОЙ ЗАПУСК ---
@@ -238,6 +250,8 @@ def main():
         allow_reentry=True
     )
     
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message), group=-1 )
+
     app.add_handler(new_task_handler)
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("set_time", set_time_handler))
