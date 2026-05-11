@@ -31,7 +31,7 @@ WAITING_FOR_GOAL = 1
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
-TOKEN = os.getenv("BOT")
+TOKEN = os.getenv("BOT_TOKEN")
 
 if not TOKEN:
     print("Ошибка: Переменная BOT_TOKEN не найдена")
