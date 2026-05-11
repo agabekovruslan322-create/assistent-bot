@@ -1,10 +1,14 @@
 import psycopg2
+from dotenv import load_dotenv
 import os
 
-DATABASE_URL = "postgresql://postgres:zEtOhYFvUsDHxkMAFtdratYjfHuJaqvF@shuttle.proxy.rlwy.net:16580/railway"
+load_dotenv()
+
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 def connect():
-    return psycopg2.connect(DATABASE_URL, sslmode='require')
+    return 
+psycopg2.connect(DATABASE_URL)
 
 def create_table():
     conn = connect()
