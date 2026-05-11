@@ -143,12 +143,13 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.answer("Обещание принято.")
         await query.edit_message_text("**Обещание зафиксировано.**\nИспользуй меню для работы.", parse_mode="Markdown")
 
-    main_menu_keyboard = [['⚔️ Мои цели', '📊 Статистика'], ['📜 История', '📝 Новая задача'], ['⚙️ Настройки']]
-    await context.bot.send_message(
-        chat_id=user_id,
-        text="Synora активна. Время действовать! 🚀",
-        reply_markup=ReplyKeyboardMarkup(main_menu_keyboard, resize_keyboard=True)
-    )
+        main_menu_keyboard = [['⚔️ Мои цели', '📊 Статистика'], ['📜 История', '📝 Новая задача'], ['⚙️ Настройки']]
+        await context.bot.send_message(
+            chat_id=user_id,
+            text="Synora активна. Время действовать! 🚀",
+            reply_markup=ReplyKeyboardMarkup(main_menu_keyboard, resize_keyboard=True)
+        )
+
     elif callback_data.startswith("done_"):
         goal_id = int(callback_data.split("_")[1])
         task_text = complete_goal(goal_id, user_id)
