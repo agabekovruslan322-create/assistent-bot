@@ -1,34 +1,34 @@
+import logging
 import pytz
 from datetime import datetime
 from database import connect
 
 
 def add_todays_goal(user_id, goal):
-    conn = connect()
-    cursor = conn.cursor()
-    tz = pytz.timezone('Europe/Moscow')
-    now = datetime.now(tz).strftime("%Y-%m-%d %H:%M")
+    with connect() as conn:
+        cursor = conn.cursor()
+        tz = pytz.timezone('Europe/Moscow')
+        now = datetime.now(tz).strftime("%Y-%m-%d %H:%M")
     
-    cursor.execute(
-        "INSERT INTO goals_v4 (user_id, text, date) VALUES (%s, %s, %s)",
-        (user_id, goal, now)
-    )
-    conn.commit()
-    conn.close()
-    return "Цель добавлена!"
+        cursor.execute(
+            "INSERT INTO goals_v4 (user_id, text, date) VALUES (%s, %s, %s)",
+            (user_id, goal, now)
+        )
+        conn.commit()
+        return "Цель добавлена!"
+
 
 def get_todays_goal(user_id):
-    conn = connect()
-    cursor = conn.cursor()
-    tz = pytz.timezone('Europe/Moscow')
-    today_str = datetime.now(tz).strftime("%Y-%m-%d")
+    with connect() as conn:
+        cursor = conn.cursor()
+        tz = pytz.timezone('Europe/Moscow')
+        today_str = datetime.now(tz).strftime("%Y-%m-%d")
 
-    cursor.execute(
-        "SELECT text FROM goals_v4 WHERE user_id=%s AND date LIKE %s",
-        (user_id, f"{today_str}%")
-    )
-    rows = cursor.fetchall()
-    conn.close()
+        cursor.execute(
+            "SELECT text FROM goals_v4 WHERE user_id=%s AND date LIKE %s",
+            (user_id, f"{today_str}%")
+        )
+        rows = cursor.fetchall()
 
     if not rows:
         return "На сегодня целей нет. Ты свободен или просто забыл про мечты?"
@@ -39,8 +39,8 @@ def get_todays_goal(user_id):
     return result
 
 def show_goals(user_id, only_active=True):
-    conn = connect()
-    cursor = conn.cursor()
+    with connect() as conn:
+        cursor = conn.cursor()
     
     if only_active:
         query = "SELECT id, text, date FROM goals_v4 WHERE user_id=%s AND is_completed=FALSE ORDER BY id ASC"
@@ -49,7 +49,6 @@ def show_goals(user_id, only_active=True):
 
     cursor.execute(query, (user_id,))
     rows = cursor.fetchall()
-    conn.close()
 
     if not rows:
         return "Твой список пуст. Время течет сквозь пальцы..."
@@ -67,8 +66,8 @@ def get_history(user_id):
     return show_goals(user_id, only_active=False)
 
 def delete_goals(ids_text, user_id):
-    conn = connect()
-    cursor = conn.cursor()
+    with connect() as conn:
+        cursor = conn.cursor()
     try:
         ids_to_delete = [int(i) for i in ids_text.replace(",", " ").split() if i.isdigit()]
         if not ids_to_delete:
@@ -81,49 +80,44 @@ def delete_goals(ids_text, user_id):
         delete_count = cursor.rowcount
         conn.commit()
     except Exception as e:
-        conn.close()
         return f"☢️ Ошибка базы: {e}"
     
-    conn.close()
     return f"✅ Удалено целей: {delete_count}." if delete_count > 0 else "❌ Задачи не найдены."
 
 def complete_goal(goal_id, user_id):
-    conn = connect()
-    cursor = conn.cursor()
-    cursor.execute(
-        "UPDATE goals_v4 SET is_completed = TRUE WHERE id = %s AND user_id = %s RETURNING text",
-        (goal_id, user_id)
-    )
-    row = cursor.fetchone()
-    conn.commit()
-    conn.close()
-    return row[0] if row else None
+    with connect() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE goals_v4 SET is_completed = TRUE WHERE id = %s AND user_id = %s RETURNING text",
+            (goal_id, user_id)
+        )
+        row = cursor.fetchone()
+        conn.commit()
+        return row[0] if row else None
 
 def update_goal_text(goal_id, user_id, new_text):
-    conn = connect()
-    cursor = conn.cursor()
-    cursor.execute(
-        "UPDATE goals_v4 SET text = %s WHERE id = %s AND user_id = %s",
-        (new_text, goal_id, user_id)
-    ) 
-    updated_rows = cursor.rowcount
-    conn.commit()
-    conn.close()
-    return updated_rows > 0
+    with connect() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE goals_v4 SET text = %s WHERE id = %s AND user_id = %s",
+            (new_text, goal_id, user_id)
+       ) 
+        updated_rows = cursor.rowcount
+        conn.commit()
+        return updated_rows > 0
 
 def get_user_stats(user_id):
-    conn = connect()
-    cursor = conn.cursor()
-    cursor.execute("""
-        SELECT 
-            COUNT(*), 
-            SUM(CASE WHEN is_completed THEN 1 ELSE 0 END) 
-        FROM goals_v4 
-        WHERE user_id = %s
-    """, (user_id,))
+    with connect() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT 
+                COUNT(*), 
+                SUM(CASE WHEN is_completed THEN 1 ELSE 0 END) 
+            FROM goals_v4 
+            WHERE user_id = %s
+        """, (user_id,))
     
-    total, completed = cursor.fetchone()
-    conn.close()
+        total, completed = cursor.fetchone()
 
     if not total:
         return "Твой путь еще не начат. Добавь первую цель!"
@@ -148,40 +142,33 @@ def add_multi_goals(user_id, text):
     return f"⚡️ Добавлено целей: {len(goals)}"
 
 def check_vow(user_id):
-    conn = connect()
-    cursor = conn.cursor()
-    try:
-        cursor.execute("SELECT 1 FROM vows WHERE user_id = %s", (user_id,))
-        result = cursor.fetchone()
-        return result is not None
-    except Exception as e:
-        print(f"Ошибка при проверке клятвы: {e}")
-        return False
-    finally:
-        cursor.close()
-        conn.close()
+    with connect() as conn:
+        cursor = conn.cursor()
+        try:
+            cursor.execute("SELECT 1 FROM vows WHERE user_id = %s", (user_id,))
+            result = cursor.fetchone()
+            return result is not None
+        except Exception as e:
+            logging.error(f"Ошибка при проверке клятвы: {e}")
+            return False
 
 def add_vow(user_id):
-    conn = connect()
-    cursor = conn.cursor()
-    try:
-        cursor.execute(
-            "INSERT INTO vows (user_id) VALUES (%s) ON CONFLICT (user_id) DO NOTHING", 
-            (user_id,)
-        )
-        conn.commit()
-        print(f"DEBUG: Клятва для {user_id} успешно записана!")
-    except Exception as e:
-        print(f"ОШИБКА ПРИ ЗАПИСИ КЛЯТВЫ: {e}")
-    finally:
-        cursor.close()
-        conn.close()
+    with connect() as conn:
+        cursor = conn.cursor()
+        try:
+            cursor.execute(
+                "INSERT INTO vows (user_id) VALUES (%s) ON CONFLICT (user_id) DO NOTHING", 
+                (user_id,)
+            )
+            conn.commit()
+            logging.info(f"DEBUG: Клятва для {user_id} успешно записана!")
+        except Exception as e:
+            logging.error(f"ОШИБКА ПРИ ЗАПИСИ КЛЯТВЫ: {e}")
 
 def get_users_for_judgement(current_time):
-    conn = connect()
-    cursor = conn.cursor()
+    with connect() as conn:
+        cursor = conn.cursor()
 
-    cursor.execute("SELECT user_id FROM user_settings WHERE day_end_time = %s", (current_time,))
-    result = cursor.fetchall()
-    conn.close()
-    return [u[0] for u in result]
+        cursor.execute("SELECT user_id FROM user_settings WHERE day_end_time = %s", (current_time,))
+        result = cursor.fetchall()
+        return [u[0] for u in result]

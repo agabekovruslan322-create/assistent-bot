@@ -3,7 +3,7 @@ import os
 import pytz
 import logging
 import traceback
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup
 from telegram.ext import (
@@ -19,9 +19,9 @@ from telegram.ext import (
 # Импорты из файлов
 from database import create_table, connect, get_or_create_settings, update_user_time
 from program import (
-    get_todays_goal, add_todays_goal, show_goals, delete_goals, 
-    add_multi_goals, update_goal_text, complete_goal, 
-    get_user_stats, get_history, check_vow, add_vow, get_users_for_judgement
+    add_todays_goal, delete_goals, 
+    complete_goal, get_user_stats, get_history, 
+    check_vow, add_vow, get_users_for_judgement
 )
 
 # Константы для диалогов
@@ -80,17 +80,18 @@ async def today(update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     user_id = update.effective_user.id
-    conn = connect()
-    cursor = conn.cursor()
-    tz = pytz.timezone('Europe/Moscow')
-    today_str = datetime.now(tz).strftime("%Y-%m-%d")
 
-    cursor.execute(
-        "SELECT id, text FROM goals_v4 WHERE user_id=%s AND date LIKE %s AND is_completed=FALSE",
-        (user_id, f"{today_str}%")
-    )
-    rows = cursor.fetchall()
-    conn.close()
+    with connect() as conn:
+        cursor = conn.cursor()
+        tz = pytz.timezone('Europe/Moscow')
+        today_str = datetime.now(tz).strftime("%Y-%m-%d")
+
+        cursor.execute(
+            "SELECT id, text FROM goals_v4 WHERE user_id=%s AND date LIKE %s AND is_completed=FALSE",
+            (user_id, f"{today_str}%")
+        )
+
+        rows = cursor.fetchall()
 
     if not rows:
         await update.message.reply_text("На сегодня целей нет. Отдыхаешь или забыл про мечты?")
@@ -170,7 +171,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         goal_id = int(callback_data.split("_")[1])
         task_text = complete_goal(goal_id, user_id)
         if task_text:
-            await query.answer(f"Выполнено!")
+            await query.answer("Выполнено!")
             await query.edit_message_text(f"🔥 Задача «{task_text}» выполнена. Красава!")
         else:
             await query.answer("Ошибка: Задача не найдена.")
