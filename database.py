@@ -47,15 +47,16 @@ def create_table():
 def get_or_create_settings(user_id):
     with connect() as conn:
         cursor = conn.cursor()
+
         cursor.execute("SELECT day_end_time FROM user_settings WHERE user_id = %s", (user_id,))
         row = cursor.fetchone()
     
-    if not row:
-        cursor.execute("INSERT INTO user_settings (user_id, day_end_time) VALUES (%s, %s)", (user_id, "22:00"))
-        conn.commit()
-        row = ("22:00",)
+        if not row:
+            cursor.execute("INSERT INTO user_settings (user_id, day_end_time) VALUES (%s, %s)", (user_id, "22:00"))
+            conn.commit()
+            row = ("22:00",)
     
-    return row
+        return row
 
 def update_user_time(user_id, new_time):
     with connect() as conn:

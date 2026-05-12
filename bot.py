@@ -17,11 +17,11 @@ from telegram.ext import (
 )
 
 # Импорты из файлов
-from database import create_table, connect, get_or_create_settings, update_user_time
+from database import create_table, get_or_create_settings, update_user_time
 from program import (
     add_todays_goal, delete_goals, 
     complete_goal, get_user_stats, get_history, 
-    check_vow, add_vow, get_users_for_judgement
+    check_vow, add_vow, get_users_for_judgement, get_today_goals
 )
 
 # Константы для диалогов
@@ -81,17 +81,7 @@ async def today(update, context: ContextTypes.DEFAULT_TYPE):
 
     user_id = update.effective_user.id
 
-    with connect() as conn:
-        cursor = conn.cursor()
-        tz = pytz.timezone('Europe/Moscow')
-        today_str = datetime.now(tz).strftime("%Y-%m-%d")
-
-        cursor.execute(
-            "SELECT id, text FROM goals_v4 WHERE user_id=%s AND date LIKE %s AND is_completed=FALSE",
-            (user_id, f"{today_str}%")
-        )
-
-        rows = cursor.fetchall()
+    rows = get_today_goals(user_id)
 
     if not rows:
         await update.message.reply_text("На сегодня целей нет. Отдыхаешь или забыл про мечты?")

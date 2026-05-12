@@ -17,38 +17,34 @@ def add_todays_goal(user_id, goal):
         conn.commit()
         return "Цель добавлена!"
 
+def get_today_goals(user_id):
 
-def get_todays_goal(user_id):
     with connect() as conn:
         cursor = conn.cursor()
+
         tz = pytz.timezone('Europe/Moscow')
         today_str = datetime.now(tz).strftime("%Y-%m-%d")
 
         cursor.execute(
-            "SELECT text FROM goals_v4 WHERE user_id=%s AND date LIKE %s",
+            "SELECT id, text FROM goals_v4 WHERE user_id=%s AND date LIKE %s AND is_completed=FALSE",
             (user_id, f"{today_str}%")
         )
+
         rows = cursor.fetchall()
 
-    if not rows:
-        return "На сегодня целей нет. Ты свободен или просто забыл про мечты?"
-
-    result = f"📅 Твой план на сегодня ({today_str}):\n\n"
-    for i, (text,) in enumerate(rows, start=1):
-        result += f"{i}. {text}\n"
-    return result
+        return rows
 
 def show_goals(user_id, only_active=True):
     with connect() as conn:
         cursor = conn.cursor()
     
-    if only_active:
-        query = "SELECT id, text, date FROM goals_v4 WHERE user_id=%s AND is_completed=FALSE ORDER BY id ASC"
-    else:
-        query = "SELECT id, text, date FROM goals_v4 WHERE user_id=%s AND is_completed=TRUE ORDER BY date DESC"
+        if only_active:
+            query = "SELECT id, text, date FROM goals_v4 WHERE user_id=%s AND is_completed=FALSE ORDER BY id ASC"
+        else:
+            query = "SELECT id, text, date FROM goals_v4 WHERE user_id=%s AND is_completed=TRUE ORDER BY date DESC"
 
-    cursor.execute(query, (user_id,))
-    rows = cursor.fetchall()
+        cursor.execute(query, (user_id,))
+        rows = cursor.fetchall()
 
     if not rows:
         return "Твой список пуст. Время течет сквозь пальцы..."
@@ -68,21 +64,21 @@ def get_history(user_id):
 def delete_goals(ids_text, user_id):
     with connect() as conn:
         cursor = conn.cursor()
-    try:
-        ids_to_delete = [int(i) for i in ids_text.replace(",", " ").split() if i.isdigit()]
-        if not ids_to_delete:
-            return "❌ Укажи ID через пробел или запятую."
+        try:
+            ids_to_delete = [int(i) for i in ids_text.replace(",", " ").split() if i.isdigit()]
+            if not ids_to_delete:
+                return "❌ Укажи ID через пробел или запятую."
 
-        cursor.execute(
-            "DELETE FROM goals_v4 WHERE user_id = %s AND id IN %s",
-            (user_id, tuple(ids_to_delete))
-        )
-        delete_count = cursor.rowcount
-        conn.commit()
-    except Exception as e:
-        return f"☢️ Ошибка базы: {e}"
+            cursor.execute(
+                "DELETE FROM goals_v4 WHERE user_id = %s AND id IN %s",
+                (user_id, tuple(ids_to_delete))
+            )
+            delete_count = cursor.rowcount
+            conn.commit()
+        except Exception as e:
+            return f"☢️ Ошибка базы: {e}"
     
-    return f"✅ Удалено целей: {delete_count}." if delete_count > 0 else "❌ Задачи не найдены."
+        return f"✅ Удалено целей: {delete_count}." if delete_count > 0 else "❌ Задачи не найдены."
 
 def complete_goal(goal_id, user_id):
     with connect() as conn:
