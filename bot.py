@@ -248,8 +248,8 @@ async def require_vow(update):
     return True
 
 async def check_reminders(context: ContextTypes.DEFAULT_TYPE):
-
-    current_time = datetime.now().strftime("%H:%M")
+    tz = pytz.timezone('Europe/Moscow')
+    current_time = datetime.now(tz).strftime("%H:%M")
 
     goals = get_goals_for_reminder(current_time)
 
