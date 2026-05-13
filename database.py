@@ -26,8 +26,12 @@ def create_table():
         CREATE TABLE IF NOT EXISTS goals_v4 (
             id SERIAL PRIMARY KEY,
             user_id BIGINT,
-            text TEXT,
-            date TEXT,
+            text TEXT NOT NULL,
+            create_at TIMESTAMP NOT NULL,
+            due_date TIMESTAMP,
+                       
+            reminder_time TIME,
+                       
             is_completed BOOLEAN DEFAULT FALSE
         )
         """)
@@ -38,6 +42,21 @@ def create_table():
             day_end_time TEXT DEFAULT '22:00',
             timezone TEXT DEFAULT 'Europe/Moscow'
             )
+        """)
+
+        cursor.execute("""
+            ALTER TABLE goals_v4
+            ADD COLUMN IF NOT EXISTS created_at TIMESTAMP
+        """)
+
+        cursor.execute("""
+            ALTER TABLE goals_v4
+            ADD CLOUMN IF NOT EXISTS due_date TIMESTAMP
+        """)
+
+        cursor.execute("""
+            ALTER TABLE goals_v4
+            ADD COLUMN IF NOT EXISTS reminder_time TIME
         """)
 
     conn.commit()

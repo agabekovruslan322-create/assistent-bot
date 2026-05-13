@@ -157,7 +157,7 @@ def add_vow(user_id):
                 (user_id,)
             )
             conn.commit()
-            logging.info(f"DEBUG: Клятва для {user_id} успешно записана!")
+            logging.info(f"Клятва для {user_id} успешно записана!")
         except Exception as e:
             logging.error(f"ОШИБКА ПРИ ЗАПИСИ КЛЯТВЫ: {e}")
 
