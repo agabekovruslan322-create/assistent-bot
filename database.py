@@ -32,7 +32,8 @@ def create_table():
                        
             reminder_time TIME,
                        
-            is_completed BOOLEAN DEFAULT FALSE
+            is_completed BOOLEAN DEFAULT FALSE,
+            is_reminded BOOLEAN DEFAULT FALSE
         )
         """)
     #Таблица настроек
@@ -58,6 +59,10 @@ def create_table():
             ALTER TABLE goals_v4
             ADD COLUMN IF NOT EXISTS reminder_time TIME
         """)
+
+        cursor.execute("""
+            ALTER TABLE goals_v4
+            ADD COLUMN IF NOT EXISTS is_reminded BOOLEAN DEFAULT FALSE""")
 
     conn.commit()
     cursor.close()
