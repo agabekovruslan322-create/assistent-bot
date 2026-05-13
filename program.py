@@ -201,11 +201,11 @@ def get_goals_for_reminder(current_time):
 
         cursor.execute(
             """
-            SELECT user_id, text
+            SELECT id, user_id, text
             FROM goals_v4
             WHERE reminder_time = %s
-            ADD is_completed = FALSE
-            ADD is_reminded = FALSE
+            AND is_completed = FALSE
+            AND is_reminded = FALSE
             """,
             (current_time,)
         )
