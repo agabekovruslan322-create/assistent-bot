@@ -209,3 +209,7 @@ def get_goals_for_reminder(current_time):
             """,
             (current_time,)
         )
+
+        rows = cursor.fetchall()
+
+    return rows
