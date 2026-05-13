@@ -8,6 +8,8 @@ from database import connect
 def add_todays_goal(user_id, goal):
 
     goal_text, reminder_time = extract_time(goal)
+    print(goal_text)
+    print(reminder_time)
 
     with connect() as conn:
         cursor = conn.cursor()
