@@ -28,7 +28,8 @@ def add_todays_goal(user_id, goal):
             (user_id, goal_text, now, reminder_time)
         )
         conn.commit()
-        return "Цель добавлена!"
+        
+    return "Цель добавлена!"
 
 def get_today_goals(user_id):
 
