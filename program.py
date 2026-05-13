@@ -28,7 +28,7 @@ def add_todays_goal(user_id, goal):
             (user_id, goal_text, now, reminder_time)
         )
         conn.commit()
-        
+
     return "Цель добавлена!"
 
 def get_today_goals(user_id):
@@ -193,3 +193,19 @@ def extract_time(goal_text):
     clean_text = goal_text.replace(reminder_time, "").strip()
 
     return clean_text, reminder_time
+
+def get_goals_for_reminder(current_time):
+
+    with connect() as conn:
+        cursor = conn.cursor()
+
+        cursor.execute(
+            """
+            SELECT user_id, text
+            FROM goals_v4
+            WHERE reminder_time = %s
+            AND is_completed = FALSE
+            ADD is_reminded = FALSE
+            """,
+            (current_time,)
+        )
