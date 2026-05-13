@@ -302,7 +302,7 @@ def main():
     app.add_error_handler(error_handler)
 
     logging.info("Synora запущен. 🚀")
-    app.run_polling(drop_pending_upates=True)
+    app.run_polling(drop_pending_updates=True)
 
 if __name__ == "__main__":
     main()
