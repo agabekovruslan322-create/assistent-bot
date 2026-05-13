@@ -1,18 +1,29 @@
 import logging
 import pytz
+import re
 from datetime import datetime
 from database import connect
 
 
 def add_todays_goal(user_id, goal):
+
+    goal_text, reminder_time = extract_time(goal)
+
     with connect() as conn:
         cursor = conn.cursor()
         tz = pytz.timezone('Europe/Moscow')
-        now = datetime.now(tz).strftime("%Y-%m-%d %H:%M")
+        now = datetime.now(tz)
     
         cursor.execute(
-            "INSERT INTO goals_v4 (user_id, text, date) VALUES (%s, %s, %s)",
-            (user_id, goal, now)
+            """INSERT INTO goals_v4 (
+            user_id, 
+            text, 
+            created_at, 
+            reminder_time
+            ) 
+            VALUES (%s, %s, %s, %s)
+            """,
+            (user_id, goal_text, now, reminder_time)
         )
         conn.commit()
         return "Цель добавлена!"
@@ -168,3 +179,14 @@ def get_users_for_judgement(current_time):
         cursor.execute("SELECT user_id FROM user_settings WHERE day_end_time = %s", (current_time,))
         result = cursor.fetchall()
         return [u[0] for u in result]
+    
+def extract_time(goal_text):
+    match = re.search(r"\b\d{2}:\d{2}\b", goal_text)
+
+    if not match:
+        return goal_text, None
+    
+    reminder_time = match.group()
+    clean_text = goal_text.replace(reminder_time, "").strip()
+
+    return clean_text, reminder_time
