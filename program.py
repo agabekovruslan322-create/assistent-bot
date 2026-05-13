@@ -8,8 +8,8 @@ from database import connect
 def add_todays_goal(user_id, goal):
 
     goal_text, reminder_time = extract_time(goal)
-    print(goal_text)
-    print(reminder_time)
+    logging.info(goal_text)
+    logging.info(reminder_time)
 
     with connect() as conn:
         cursor = conn.cursor()
@@ -203,11 +203,11 @@ def get_goals_for_reminder(current_time):
             """
             SELECT id, user_id, text
             FROM goals_v4
-            WHERE reminder_time = %s
+            WHERE reminder_time::text LIKE %s
             AND is_completed = FALSE
             AND is_reminded = FALSE
             """,
-            (current_time,)
+            (F"{current_time}%",)
         )
 
         rows = cursor.fetchall()
