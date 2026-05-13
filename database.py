@@ -27,7 +27,7 @@ def create_table():
             id SERIAL PRIMARY KEY,
             user_id BIGINT,
             text TEXT NOT NULL,
-            create_at TIMESTAMP NOT NULL,
+            created_at TIMESTAMP,
             due_date TIMESTAMP,
                        
             reminder_time TIME,
@@ -51,7 +51,7 @@ def create_table():
 
         cursor.execute("""
             ALTER TABLE goals_v4
-            ADD CLOUMN IF NOT EXISTS due_date TIMESTAMP
+            ADD COLUMN IF NOT EXISTS due_date TIMESTAMP
         """)
 
         cursor.execute("""
