@@ -213,3 +213,15 @@ def get_goals_for_reminder(current_time):
         rows = cursor.fetchall()
 
     return rows
+
+def mark_goal_as_reminded(goal_id):
+    with connect() as conn:
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            UPDATE goals_v4
+            SET is_reminded = TRUE
+            WHERE id = %s
+            """,
+            (goal_id,))
+        conn.commit()

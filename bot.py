@@ -21,7 +21,9 @@ from database import create_table, get_or_create_settings, update_user_time
 from program import (
     add_todays_goal, delete_goals, 
     complete_goal, get_user_stats, get_history, 
-    check_vow, add_vow, get_users_for_judgement, get_today_goals
+    check_vow, add_vow, get_users_for_judgement, get_today_goals, 
+    get_goals_for_reminder,
+    mark_goal_as_reminded
 )
 
 # Константы для диалогов
@@ -245,6 +247,19 @@ async def require_vow(update):
 
     return True
 
+async def check_reminders(context: ContextTypes.DEFAULT_TYPE):
+
+    current_time = datetime.now().strftime("%H:%M:%S")
+
+    goals = get_goals_for_reminder(current_time)
+
+    for goal_id, user_id, text in goals:
+        await context.bot.send_message(
+            chat_id=user_id,
+            text=f"⏰ Напоминание!\n\nТвоя цель: {text}"
+        )
+        mark_goal_as_reminded(goal_id)
+
 # --- ОСНОВНОЙ ЗАПУСК ---
 def main():
     create_table()
@@ -280,6 +295,8 @@ def main():
     app.add_handler(CommandHandler("stats", stats))
     app.add_handler(CommandHandler("history", history))
     app.add_handler(CommandHandler("delete", delete))
+
+    app.job_queue.run_repeating(check_reminders, interval=60, first=10)
 
     app.add_handler(CallbackQueryHandler(button_handler))
     app.add_error_handler(error_handler)
