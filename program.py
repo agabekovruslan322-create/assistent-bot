@@ -40,7 +40,11 @@ def get_today_goals(user_id):
         today_str = datetime.now(tz).strftime("%Y-%m-%d")
 
         cursor.execute(
-            "SELECT id, text FROM goals_v4 WHERE user_id=%s AND date LIKE %s AND is_completed=FALSE",
+            """SELECT id, text 
+            FROM goals_v4 
+            WHERE user_id=%s 
+            AND DATE(created_at) = CURRENT_DATE 
+            AND is_completed = FALSE""",
             (user_id, f"{today_str}%")
         )
 
@@ -53,9 +57,9 @@ def show_goals(user_id, only_active=True):
         cursor = conn.cursor()
     
         if only_active:
-            query = "SELECT id, text, date FROM goals_v4 WHERE user_id=%s AND is_completed=FALSE ORDER BY id ASC"
+            query = "SELECT id, text, created_atF ROM goals_v4 WHERE user_id=%s AND is_completed=FALSE ORDER BY id ASC"
         else:
-            query = "SELECT id, text, date FROM goals_v4 WHERE user_id=%s AND is_completed=TRUE ORDER BY date DESC"
+            query = "SELECT id, text, created_at FROM goals_v4 WHERE user_id=%s AND is_completed=TRUE ORDER BY created_at DESC"
 
         cursor.execute(query, (user_id,))
         rows = cursor.fetchall()
