@@ -36,9 +36,6 @@ def get_today_goals(user_id):
     with connect() as conn:
         cursor = conn.cursor()
 
-        tz = pytz.timezone('Europe/Moscow')
-        today_str = datetime.now(tz).strftime("%Y-%m-%d")
-
         cursor.execute(
             """SELECT id, text 
             FROM goals_v4 
@@ -72,7 +69,7 @@ def show_goals(user_id, only_active=True):
 
     for goal_id, text, date  in rows:
         icon = "⏳" if only_active else "🏛"
-        result += f"{icon} 🆔 `{goal_id}` | {text} | {date[5:10]}\n"
+        result += f"{icon} 🆔 `{goal_id}` | {text} | {date.strftime('%d.%m')}\n"
 
     return result
 
