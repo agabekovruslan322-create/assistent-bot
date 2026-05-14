@@ -69,7 +69,10 @@ def show_goals(user_id, only_active=True):
 
     for goal_id, text, date  in rows:
         icon = "⏳" if only_active else "🏛"
-        result += f"{icon} 🆔 `{goal_id}` | {text} | {date.strftime('%d.%m')}\n"
+
+        formatted_date = date.strftime("%d.%m") if date else "??.??"
+
+        result += f"{icon} 🆔 `{goal_id}` | {text} | {formatted_date}\n"
 
     return result
 
