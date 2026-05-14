@@ -63,6 +63,10 @@ def create_table():
         cursor.execute("""
             ALTER TABLE goals_v4
             ADD COLUMN IF NOT EXISTS is_reminded BOOLEAN DEFAULT FALSE""")
+        
+        cursor.execute("""
+            ALTER TABLE goals_v4
+            DROP COLUMN IF EXISTS date""")
 
     conn.commit()
     cursor.close()
