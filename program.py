@@ -21,8 +21,7 @@ def add_todays_goal(user_id, goal_text):
             """INSERT INTO goals_v4 (
             user_id, 
             text, 
-            goal_date,
-            now, 
+            goal_date, 
             reminder_time
             ) 
             VALUES (%s, %s, %s, %s, %s)
