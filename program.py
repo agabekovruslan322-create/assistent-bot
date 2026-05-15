@@ -5,7 +5,7 @@ from datetime import datetime
 from database import connect
 
 
-def add_todays_goal(user_id, goal):
+def add_todays_goal(user_id, goal_text):
 
     goal_text, reminder_time = extract_time(goal)
     logging.info(goal_text)
