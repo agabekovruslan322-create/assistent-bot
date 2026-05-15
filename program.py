@@ -22,12 +22,11 @@ def add_todays_goal(user_id, text):
             user_id, 
             text, 
             goal_date,
-            now, 
             reminder_time
             ) 
             VALUES (%s, %s, %s, %s, %s)
             """,
-            (user_id, goal_date, text, now, reminder_time)
+            (user_id, goal_date, text, reminder_time)
         )
         conn.commit()
 
