@@ -15,17 +15,19 @@ def add_todays_goal(user_id, goal):
         cursor = conn.cursor()
         tz = pytz.timezone('Europe/Moscow')
         now = datetime.now(tz)
+        goal_date = now.date(tz)
     
         cursor.execute(
             """INSERT INTO goals_v4 (
             user_id, 
             text, 
-            created_at, 
+            created_at,
+            goal_date, 
             reminder_time
             ) 
             VALUES (%s, %s, %s, %s)
             """,
-            (user_id, goal_text, now, reminder_time)
+            (user_id,goal_date, goal_text, now, reminder_time)
         )
         conn.commit()
 
@@ -40,7 +42,7 @@ def get_today_goals(user_id):
             """SELECT id, text 
             FROM goals_v4 
             WHERE user_id=%s 
-            AND DATE(created_at) = CURRENT_DATE 
+            AND goal_date = CURRENT_DATE 
             AND is_completed = FALSE""",
             (user_id,)
         )
