@@ -102,8 +102,8 @@ async def new_task_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def new_task_save(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
-    goal_text = update.message.text
-    result = add_todays_goal(user_id, goal_text)
+    text = update.message.text
+    result = add_todays_goal(user_id, text)
     await update.message.reply_text(f"✅ {result}")
     return ConversationHandler.END
 
