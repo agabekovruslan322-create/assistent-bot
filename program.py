@@ -5,10 +5,10 @@ from datetime import datetime
 from database import connect
 
 
-def add_todays_goal(user_id, goal_text):
+def add_todays_goal(user_id, text):
 
-    goal_text, reminder_time = extract_time(goal_text)
-    logging.info(goal_text)
+    text, reminder_time = extract_time(text)
+    logging.info(text)
     logging.info(reminder_time)
 
     with connect() as conn:
@@ -20,14 +20,14 @@ def add_todays_goal(user_id, goal_text):
         cursor.execute(
             """INSERT INTO goals_v4 (
             user_id, 
-            goal_text, 
+            text, 
             goal_date,
             now, 
             reminder_time
             ) 
             VALUES (%s, %s, %s, %s, %s)
             """,
-            (user_id, goal_date, goal_text, now, reminder_time)
+            (user_id, goal_date, text, now, reminder_time)
         )
         conn.commit()
 
