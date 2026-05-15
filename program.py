@@ -7,7 +7,7 @@ from database import connect
 
 def add_todays_goal(user_id, goal_text):
 
-    goal_text, reminder_time = extract_time(goal)
+    goal_text, reminder_time = extract_time(goal_text)
     logging.info(goal_text)
     logging.info(reminder_time)
 
@@ -21,7 +21,8 @@ def add_todays_goal(user_id, goal_text):
             """INSERT INTO goals_v4 (
             user_id, 
             text, 
-            goal_date, 
+            goal_date,
+            now, 
             reminder_time
             ) 
             VALUES (%s, %s, %s, %s, %s)
