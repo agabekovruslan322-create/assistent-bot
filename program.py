@@ -15,7 +15,7 @@ def add_todays_goal(user_id, goal):
         cursor = conn.cursor()
         tz = pytz.timezone('Europe/Moscow')
         now = datetime.now(tz)
-        goal_date = now.date(tz)
+        goal_date = now.date()
     
         cursor.execute(
             """INSERT INTO goals_v4 (
