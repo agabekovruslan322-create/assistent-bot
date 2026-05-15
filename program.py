@@ -20,8 +20,9 @@ def add_todays_goal(user_id, goal_text):
         cursor.execute(
             """INSERT INTO goals_v4 (
             user_id, 
-            text, 
-            goal_date, 
+            goal_text, 
+            goal_date,
+            now, 
             reminder_time
             ) 
             VALUES (%s, %s, %s, %s, %s)
