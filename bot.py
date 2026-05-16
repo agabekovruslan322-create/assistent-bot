@@ -23,7 +23,7 @@ from program import (
     complete_goal, get_user_stats, get_history, 
     check_vow, add_vow, get_users_for_judgement, get_today_goals, 
     get_goals_for_reminder,
-    mark_goal_as_reminded
+    mark_goal_as_reminded, get_overdue_goals
 )
 
 # Константы для диалогов
@@ -260,6 +260,26 @@ async def check_reminders(context: ContextTypes.DEFAULT_TYPE):
         )
         mark_goal_as_reminded(goal_id)
 
+async def overdue(update, context: ContextTypes.DEFAULT_TYPE):
+
+    if not await require_vow(update):
+        return
+    
+    user_id = update.effective.user_id
+    rows = get_overdue_goals(user_id)
+
+    if not rows:
+        await update.message.reply_text(
+            "Просроченных целей нет. Хороший знак. ⚔️"
+        )
+        return
+    text = "⏳ Просроченные цели:\n\n"
+
+    for goal_id, goal_text in rows:
+        text += f"• {goal_text}\n"
+
+    await update.message.reply_text(text)
+
 # --- ОСНОВНОЙ ЗАПУСК ---
 def main():
     create_table()
@@ -289,6 +309,7 @@ def main():
     app.add_handler(MessageHandler(filters.Text("📊 Статистика"), stats))
     app.add_handler(MessageHandler(filters.Text("📜 История"), history))
     app.add_handler(MessageHandler(filters.Text("⚙️ Настройки"), settings_menu)) 
+    app.add_handler(MessageHandler(filters.Text("⏳ Просрочено"), overdue))
 
     # Команды
     app.add_handler(CommandHandler("today", today))
