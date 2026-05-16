@@ -68,7 +68,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     main_menu_keyboard = [
         ['⚔️ Мои цели', '📊 Статистика'],
         ['📜 История', '📝 Новая задача'],
-        ['⏳ Просрочено', '⚙️ Настройки'] 
+        ['⏳ Просрочено', '🗓 Будущие'],
+        ['⚙️ Настройки'] 
     ]
     await update.message.reply_text(
         "Synora активна. 🚀\nВыбирай действие:",
@@ -155,7 +156,8 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         main_menu_keyboard = [
             ['⚔️ Мои цели', '📊 Статистика'], 
             ['📜 История', '📝 Новая задача'], 
-            ['⏳ Просрочено', '⚙️ Настройки']
+            ['⏳ Просрочено', '🗓 Будущие'], 
+            ['⚙️ Настройки']
         ]
         await context.bot.send_message(
             chat_id=user_id,
@@ -237,6 +239,8 @@ async def cancel_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return await history(update, context)
     elif text == "⏳ Просрочено":
         return await overdue(update, context)
+    elif text == "🗓 Будущие":
+        return await future(update, context)
 
     return ConversationHandler.END
 
@@ -334,6 +338,7 @@ def main():
     app.add_handler(MessageHandler(filters.Text("📜 История"), history))
     app.add_handler(MessageHandler(filters.Text("⚙️ Настройки"), settings_menu)) 
     app.add_handler(MessageHandler(filters.Text("⏳ Просрочено"), overdue))
+    app.add_handler(MessageHandler(filters.Text("🗓 Будущие"), future))
 
     # Команды
     app.add_handler(CommandHandler("today", today))
