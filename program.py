@@ -90,7 +90,7 @@ def get_future_goals(user_id):
         today = datetime.now(tz).date()
 
         cursor.execute("""
-            SELECT id, user_id
+            SELECT id, text
             FROM goals_v4
             WHERE user_id = %s
             AND goal_date > %s
