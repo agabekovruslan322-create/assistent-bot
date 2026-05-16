@@ -22,7 +22,7 @@ from program import (
     add_todays_goal, delete_goals, 
     complete_goal, get_user_stats, get_history, 
     check_vow, add_vow, get_users_for_judgement, get_today_goals, 
-    get_goals_for_reminder,
+    get_goals_for_reminder, get_future_goals,
     mark_goal_as_reminded, get_overdue_goals
 )
 
@@ -279,6 +279,26 @@ async def overdue(update, context: ContextTypes.DEFAULT_TYPE):
         return
     text = "⏳ Просроченные цели:\n\n"
 
+    for goal_id, goal_text in rows:
+        text += f"• {goal_text}\n"
+
+    await update.message.reply_text(text)
+
+async def future(update, context: ContextTypes.DEFAULT_TYPE):
+    if not await require_vow(update):
+        return
+    
+    user_id = update.effective_user.id
+    rows = get_future_goals(user_id)
+
+    if not rows:
+        await update.message.reply_text(
+            "Будущих целей пока нет. ⚔️"
+        )
+        return
+    
+    text = "🗓 Будущие цели:\n\n"
+    
     for goal_id, goal_text in rows:
         text += f"• {goal_text}\n"
 
