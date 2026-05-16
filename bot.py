@@ -68,7 +68,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     main_menu_keyboard = [
         ['⚔️ Мои цели', '📊 Статистика'],
         ['📜 История', '📝 Новая задача'],
-        ['⚙️ Настройки'] 
+        ['⏳ Просрочено', '⚙️ Настройки'] 
     ]
     await update.message.reply_text(
         "Synora активна. 🚀\nВыбирай действие:",
