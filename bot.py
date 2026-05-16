@@ -320,6 +320,7 @@ def main():
     app.add_handler(CommandHandler("stats", stats))
     app.add_handler(CommandHandler("history", history))
     app.add_handler(CommandHandler("delete", delete))
+    app.add_handler(CommandHandler("overdue", overdue))
 
     app.job_queue.run_repeating(check_reminders, interval=60, first=10)
 
