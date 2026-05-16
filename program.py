@@ -279,3 +279,16 @@ def mark_goal_as_reminded(goal_id):
             """,
             (goal_id,))
         conn.commit()
+
+def get_all_users():
+
+    with connect() as conn:
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "SELECT user_id FROM vows"
+        )
+
+        rows = cursor.fetchall()
+
+    return [row[0] for row in rows]

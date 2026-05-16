@@ -23,7 +23,8 @@ from program import (
     complete_goal, get_user_stats, get_history, 
     check_vow, add_vow, get_users_for_judgement, get_today_goals, 
     get_goals_for_reminder, get_future_goals,
-    mark_goal_as_reminded, get_overdue_goals
+    mark_goal_as_reminded, get_overdue_goals,
+    get_all_users
 )
 
 # Константы для диалогов
@@ -46,6 +47,24 @@ async def error_handler(update, context):
     tb_list = traceback.format_exception(None, context.error, context.error.__traceback__)
     tb_string = "".join(tb_list)
     logging.error(tb_string)
+
+
+async def notify_restart(context: ContextTypes.DEFAULT_TYPE):
+
+    users = get_all_users()
+
+    for user_id in users:
+        try:
+            await context.bot.send_message(
+                chat_id=user_id,
+                text=(
+                     "⚠️ Synora была обновлена.\n\n"
+                    "Чтобы получить новое меню, "
+                    "напиши команду /start 🚀"
+                )
+            )
+        except Exception as e:
+            logging.error(f"Ошибка отправки {user_id}: {e}")
 
 # --- ГЛАВНЫЕ КОМАНДЫ ---
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -348,6 +367,7 @@ def main():
     app.add_handler(CommandHandler("overdue", overdue))
 
     app.job_queue.run_repeating(check_reminders, interval=60, first=10)
+    app.job_queue.run_once(notify_restart, when=10)
 
     app.add_handler(CallbackQueryHandler(button_handler))
     app.add_error_handler(error_handler)
