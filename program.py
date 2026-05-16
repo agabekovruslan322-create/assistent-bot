@@ -1,21 +1,26 @@
 import logging
 import pytz
 import re
-from datetime import datetime
+from datetime import datetime, date
 from database import connect
 
 
 def add_todays_goal(user_id, text):
-
-    text, reminder_time = extract_time(text)
-    logging.info(text)
-    logging.info(reminder_time)
 
     with connect() as conn:
         cursor = conn.cursor()
         tz = pytz.timezone('Europe/Moscow')
         now = datetime.now(tz)
         goal_date = now.date()
+
+        text, reminder_time = extract_time(text)
+        text, parsed_date = extract_date(text)
+
+        if parsed_date:
+            goal_date = parsed_date
+        else:
+            goal_date = now.date
+
     
         cursor.execute(
             """INSERT INTO goals_v4 (
@@ -117,10 +122,10 @@ def show_goals(user_id, only_active=True):
     title = "⚔️ Актуальные цели:" if only_active else "📜 Архив твоих побед:"
     result = f"{title}\n\n"
 
-    for goal_id, text, date  in rows:
+    for goal_id, text, goal_date in rows:
         icon = "⏳" if only_active else "🏛"
 
-        formatted_date = date.strftime("%d.%m") if date else "??.??"
+        formatted_date = goal_date.strftime("%d.%m") if date else "??.??"
 
         result += f"{icon} 🆔 `{goal_id}` | {text} | {formatted_date}\n"
 
@@ -292,3 +297,22 @@ def get_all_users():
         rows = cursor.fetchall()
 
     return [row[0] for row in rows]
+
+def extract_date(text):
+
+    current_year = datetime.now().year
+
+    match = re.search(r"\b(\d{2})\.(\d{2})(?:\.(\d{4}))?\b", text)
+
+    if not match:
+        return text, None
+
+    day = int(match.group(1))
+    month = int(match.group(2))
+    year = int(match.group(3)) if match.group(3) else current_year
+
+    goal_date = date(year, month, day)
+
+    clean_text = text.replace(match.group(), "").strip()
+
+    return clean_text, goal_date

@@ -368,7 +368,6 @@ def main():
     app.add_handler(CommandHandler("overdue", overdue))
 
     app.job_queue.run_repeating(check_reminders, interval=60, first=10)
-    app.job_queue.run_once(notify_restart, when=10)
 
 
     app.add_handler(CallbackQueryHandler(button_handler))
