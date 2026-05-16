@@ -156,7 +156,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             ['⚔️ Мои цели', '📊 Статистика'], 
             ['📜 История', '📝 Новая задача'], 
             ['⏳ Просрочено', '⚙️ Настройки']
-            ]
+        ]
         await context.bot.send_message(
             chat_id=user_id,
             text="Synora активна. Время действовать! 🚀",
