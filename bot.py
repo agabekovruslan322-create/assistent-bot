@@ -58,9 +58,10 @@ async def notify_restart(context: ContextTypes.DEFAULT_TYPE):
             await context.bot.send_message(
                 chat_id=user_id,
                 text=(
-                     "⚠️ Synora была обновлена.\n\n"
-                    "Чтобы получить новое меню, "
-                    "напиши команду /start 🚀"
+                     "⚠️ Synora... \n\n"
+                     "На данный момент данные функции:\n"
+                     "⏳ Просрочено | 🗓 Будущие \n"
+                     "Находятся в разработке и доступны только в beta-version."
                 )
             )
         except Exception as e:
@@ -368,6 +369,7 @@ def main():
 
     app.job_queue.run_repeating(check_reminders, interval=60, first=10)
     app.job_queue.run_once(notify_restart, when=10)
+
 
     app.add_handler(CallbackQueryHandler(button_handler))
     app.add_error_handler(error_handler)
