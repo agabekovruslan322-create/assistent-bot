@@ -227,8 +227,6 @@ async def check_for_judgement(context: ContextTypes.DEFAULT_TYPE):
 async def cancel_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
 
-    await update.message.reply_text("Возвращаемся в меню...")
-
     if text == "⚙️ Настройки":
         return await settings_menu(update, context)
     elif text == "⚔️ Мои цели":
