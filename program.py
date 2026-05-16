@@ -51,6 +51,53 @@ def get_today_goals(user_id):
         rows = cursor.fetchall()
 
         return rows
+    
+def get_overdue_goals(user_id):
+
+    with connect() as conn:
+        cursor = conn.cursor()
+
+        tz = pytz.timezone('Europe/Moscow')
+        today = datetime.now(tz).date()
+
+        cursor.execute(
+            """
+            SELECT id, text
+            FROM goals_v4
+            WHERE user_id = %s
+            AND goal_date < %s
+            AND is_completed = FALSE
+            ORDER BY goal_date ASC
+            """,
+            (user_id, today)
+        )
+
+        rows = cursor.fetchall()
+    
+    return rows
+
+def get_future_goals(user_id):
+
+    with connect() as conn:
+        cursor = conn.cursor()
+
+        tz = pytz.timezone('Europe/Moscow')
+        today = datetime.now(tz).date()
+
+        cursor.execute("""
+            SELECT id, user_id
+            FROM goals_v4
+            WHERE user_id = %s
+            AND goal_date > %s
+            AND is_completed = FALSE
+            ORDER BY goal_date ASC
+            """,
+            (user_id, today)
+        )
+
+        rows = cursor.fetchall()
+    
+    return rows
 
 def show_goals(user_id, only_active=True):
     with connect() as conn:
