@@ -233,6 +233,8 @@ async def cancel_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return await stats(update, context)
     elif text == "📜 История":
         return await history(update, context)
+    elif text == "⏳ Просрочено":
+        return await overdue(update, context)
 
     return ConversationHandler.END
 
