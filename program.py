@@ -36,14 +36,16 @@ def get_today_goals(user_id):
 
     with connect() as conn:
         cursor = conn.cursor()
+        tz = pytz.timezone('Europe/Moscow')
+        today = datetime.now(tz).date()
 
         cursor.execute(
             """SELECT id, text 
             FROM goals_v4 
-            WHERE user_id=%s 
-            AND goal_date = CURRENT_DATE 
+            WHERE user_id = %s 
+            AND goal_date = %s 
             AND is_completed = FALSE""",
-            (user_id,)
+            (user_id, today)
         )
 
         rows = cursor.fetchall()
