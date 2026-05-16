@@ -269,7 +269,7 @@ async def overdue(update, context: ContextTypes.DEFAULT_TYPE):
     if not await require_vow(update):
         return
     
-    user_id = update.effective.user_id
+    user_id = update.effective_user.id
     rows = get_overdue_goals(user_id)
 
     if not rows:
