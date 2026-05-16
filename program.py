@@ -57,9 +57,9 @@ def show_goals(user_id, only_active=True):
         cursor = conn.cursor()
     
         if only_active:
-            query = "SELECT id, text, created_at FROM goals_v4 WHERE user_id=%s AND is_completed=FALSE ORDER BY id ASC"
+            query = "SELECT id, text, goal_date FROM goals_v4 WHERE user_id=%s AND is_completed=FALSE ORDER BY id ASC"
         else:
-            query = "SELECT id, text, created_at FROM goals_v4 WHERE user_id=%s AND is_completed=TRUE ORDER BY created_at DESC"
+            query = "SELECT id, text, goal_date FROM goals_v4 WHERE user_id=%s AND is_completed=TRUE ORDER BY created_at DESC"
 
         cursor.execute(query, (user_id,))
         rows = cursor.fetchall()
@@ -149,7 +149,7 @@ def get_user_stats(user_id):
         f"[{bar}]\n\n"
         f"✅ Завершено: {completed}\n"
         f"⏳ Всего: {total}\n\n"
-        f"_«Не важно, как медленно ты идешь, главное — не останавливаться»._"
+        f"«Не важно, как медленно ты идешь, главное — не останавливаться»."
     )
 
 def add_multi_goals(user_id, text):
