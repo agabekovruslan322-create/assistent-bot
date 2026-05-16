@@ -152,7 +152,11 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.answer("Обещание принято.")
         await query.edit_message_text("**Обещание зафиксировано.**\nИспользуй меню для работы.", parse_mode="Markdown")
 
-        main_menu_keyboard = [['⚔️ Мои цели', '📊 Статистика'], ['📜 История', '📝 Новая задача'], ['⚙️ Настройки']]
+        main_menu_keyboard = [
+            ['⚔️ Мои цели', '📊 Статистика'], 
+            ['📜 История', '📝 Новая задача'], 
+            ['⏳ Просрочено', '⚙️ Настройки']
+            ]
         await context.bot.send_message(
             chat_id=user_id,
             text="Synora активна. Время действовать! 🚀",
@@ -294,7 +298,7 @@ def main():
         entry_points=[MessageHandler(filters.Regex("^📝 Новая задача$"), new_task_start)],
         states={
             WAITING_FOR_GOAL: [
-                MessageHandler(filters.Regex("^(⚔️ Мои цели|📊 Статистика|📜 История|⚙️ Настройки)$"), cancel_handler),
+                MessageHandler(filters.Regex("^(⚔️ Мои цели|📊 Статистика|📜 История|⚙️ Настройки|⏳ Просрочено)$"), cancel_handler),
                 MessageHandler(filters.TEXT & ~filters.COMMAND, new_task_save)
             ],
         },
